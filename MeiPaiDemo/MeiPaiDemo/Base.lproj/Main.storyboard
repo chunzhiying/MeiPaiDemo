@@ -1,25 +1,135 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vGa-fK-nwi">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Main Tab Bar Controller-->
+        <scene sceneID="5Ha-eK-Leb">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController id="vGa-fK-nwi" customClass="MPMainTabBarController" customModule="MeiPaiDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBar key="tabBar" opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" id="HgH-dl-dzp">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="74P-Sn-YUh" kind="relationship" relationship="viewControllers" id="Xdt-c7-e8F"/>
+                        <segue destination="H6N-6T-LsP" kind="relationship" relationship="viewControllers" id="gbl-sR-hKG"/>
+                        <segue destination="UO7-3w-PcX" kind="relationship" relationship="viewControllers" id="53V-pz-gHY"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JWN-ou-6ds" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-10" y="553"/>
+        </scene>
+        <!--Home-->
+        <scene sceneID="S2M-g3-ksD">
+            <objects>
+                <navigationController id="74P-Sn-YUh" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Home" id="639-zy-x2C"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="blackTranslucent" id="g0G-Hp-44W">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="2aC-5I-IUi" kind="relationship" relationship="rootViewController" id="nkM-A6-rtR"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CiS-db-yT5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="804" y="-116"/>
+        </scene>
+        <!--Home-->
+        <scene sceneID="Aa1-ug-Wxu">
+            <objects>
+                <viewController id="2aC-5I-IUi" customClass="HomeViewController" customModule="MeiPaiDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                        <viewControllerLayoutGuide type="top" id="L6b-Bg-igy"/>
+                        <viewControllerLayoutGuide type="bottom" id="maI-MO-bHR"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="qUS-0c-7hx">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Home" id="IX2-Yc-SxM"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="75v-y0-eOU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="1552" y="-103"/>
+        </scene>
+        <!--MeiPai-->
+        <scene sceneID="hBk-6e-xb9">
+            <objects>
+                <viewController id="lGr-AR-c4X" customClass="RecordViewController" customModule="MeiPaiDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="EsD-KG-Z7h"/>
+                        <viewControllerLayoutGuide type="bottom" id="k0r-kV-vbY"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="iSK-1i-crm">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="MeiPai" id="L5E-hC-1O2"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bMo-fk-8NL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1546" y="565"/>
+        </scene>
+        <!--Me-->
+        <scene sceneID="BKC-gh-VI1">
+            <objects>
+                <viewController id="edA-nN-amp" customClass="ProfileViewController" customModule="MeiPaiDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="L7L-hd-NDi"/>
+                        <viewControllerLayoutGuide type="bottom" id="orN-cw-jWz"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="wV1-ts-TAJ">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Me" id="87e-LE-bji"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="atL-G3-ZyE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1544" y="1309"/>
+        </scene>
+        <!--Me-->
+        <scene sceneID="pqM-jv-J78">
+            <objects>
+                <navigationController id="UO7-3w-PcX" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Me" id="Cwe-5O-0yt"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="blackTranslucent" id="9iv-mt-WVx">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="edA-nN-amp" kind="relationship" relationship="rootViewController" id="zIY-5R-ATJ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6WK-79-Io9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="786" y="1309"/>
+        </scene>
+        <!--MeiPai-->
+        <scene sceneID="Vfi-gP-lOz">
+            <objects>
+                <navigationController id="H6N-6T-LsP" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="MeiPai" id="FVY-D1-7Hr"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="blackTranslucent" id="UgD-YC-xXn">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="lGr-AR-c4X" kind="relationship" relationship="rootViewController" id="chF-gr-sGZ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PLh-p4-fH7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="786" y="568"/>
         </scene>
     </scenes>
 </document>

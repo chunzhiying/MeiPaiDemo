@@ -8,20 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		98E88B671BBA878D00D4D18D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E88B661BBA878D00D4D18D /* AppDelegate.swift */; };
-		98E88B691BBA878D00D4D18D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E88B681BBA878D00D4D18D /* ViewController.swift */; };
 		98E88B6C1BBA878D00D4D18D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98E88B6A1BBA878D00D4D18D /* Main.storyboard */; };
 		98E88B6E1BBA878D00D4D18D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98E88B6D1BBA878D00D4D18D /* Assets.xcassets */; };
 		98E88B711BBA878D00D4D18D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98E88B6F1BBA878D00D4D18D /* LaunchScreen.storyboard */; };
+		98E88B7F1BBA8E0A00D4D18D /* MPMainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E88B7E1BBA8E0A00D4D18D /* MPMainTabBarController.swift */; settings = {ASSET_TAGS = (); }; };
+		98E88B841BBA8F3C00D4D18D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E88B831BBA8F3C00D4D18D /* HomeViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		98E88B861BBA8F8100D4D18D /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E88B851BBA8F8100D4D18D /* RecordViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		98E88B881BBA8F9400D4D18D /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E88B871BBA8F9400D4D18D /* ProfileViewController.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		98E88B631BBA878D00D4D18D /* MeiPaiDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeiPaiDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98E88B661BBA878D00D4D18D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		98E88B681BBA878D00D4D18D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		98E88B6B1BBA878D00D4D18D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		98E88B6D1BBA878D00D4D18D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		98E88B701BBA878D00D4D18D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		98E88B721BBA878D00D4D18D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		98E88B7E1BBA8E0A00D4D18D /* MPMainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MPMainTabBarController.swift; path = ../MPMainTabBarController.swift; sourceTree = "<group>"; };
+		98E88B831BBA8F3C00D4D18D /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		98E88B851BBA8F8100D4D18D /* RecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
+		98E88B871BBA8F9400D4D18D /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,13 +61,80 @@
 			isa = PBXGroup;
 			children = (
 				98E88B661BBA878D00D4D18D /* AppDelegate.swift */,
-				98E88B681BBA878D00D4D18D /* ViewController.swift */,
-				98E88B6A1BBA878D00D4D18D /* Main.storyboard */,
-				98E88B6D1BBA878D00D4D18D /* Assets.xcassets */,
+				98E88B781BBA8C4800D4D18D /* Model */,
+				98E88B7C1BBA8CB900D4D18D /* View */,
+				98E88B7D1BBA8CD600D4D18D /* ViewController */,
+				98E88B7A1BBA8C7A00D4D18D /* StoryBoard */,
+				98E88B7B1BBA8C8F00D4D18D /* Resource */,
 				98E88B6F1BBA878D00D4D18D /* LaunchScreen.storyboard */,
-				98E88B721BBA878D00D4D18D /* Info.plist */,
 			);
 			path = MeiPaiDemo;
+			sourceTree = "<group>";
+		};
+		98E88B781BBA8C4800D4D18D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		98E88B7A1BBA8C7A00D4D18D /* StoryBoard */ = {
+			isa = PBXGroup;
+			children = (
+				98E88B6A1BBA878D00D4D18D /* Main.storyboard */,
+			);
+			name = StoryBoard;
+			sourceTree = "<group>";
+		};
+		98E88B7B1BBA8C8F00D4D18D /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				98E88B721BBA878D00D4D18D /* Info.plist */,
+				98E88B6D1BBA878D00D4D18D /* Assets.xcassets */,
+			);
+			name = Resource;
+			sourceTree = "<group>";
+		};
+		98E88B7C1BBA8CB900D4D18D /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		98E88B7D1BBA8CD600D4D18D /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				98E88B7E1BBA8E0A00D4D18D /* MPMainTabBarController.swift */,
+				98E88B801BBA8E9700D4D18D /* Home */,
+				98E88B821BBA8EDE00D4D18D /* MeiPai */,
+				98E88B811BBA8EC400D4D18D /* Me */,
+			);
+			name = ViewController;
+			sourceTree = "<group>";
+		};
+		98E88B801BBA8E9700D4D18D /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				98E88B831BBA8F3C00D4D18D /* HomeViewController.swift */,
+			);
+			name = Home;
+			sourceTree = "<group>";
+		};
+		98E88B811BBA8EC400D4D18D /* Me */ = {
+			isa = PBXGroup;
+			children = (
+				98E88B871BBA8F9400D4D18D /* ProfileViewController.swift */,
+			);
+			name = Me;
+			sourceTree = "<group>";
+		};
+		98E88B821BBA8EDE00D4D18D /* MeiPai */ = {
+			isa = PBXGroup;
+			children = (
+				98E88B851BBA8F8100D4D18D /* RecordViewController.swift */,
+			);
+			name = MeiPai;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -134,8 +207,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				98E88B691BBA878D00D4D18D /* ViewController.swift in Sources */,
 				98E88B671BBA878D00D4D18D /* AppDelegate.swift in Sources */,
+				98E88B7F1BBA8E0A00D4D18D /* MPMainTabBarController.swift in Sources */,
+				98E88B881BBA8F9400D4D18D /* ProfileViewController.swift in Sources */,
+				98E88B841BBA8F3C00D4D18D /* HomeViewController.swift in Sources */,
+				98E88B861BBA8F8100D4D18D /* RecordViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
