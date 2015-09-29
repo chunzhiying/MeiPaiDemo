@@ -8,7 +8,7 @@
         <scene sceneID="5Ha-eK-Leb">
             <objects>
                 <tabBarController id="vGa-fK-nwi" customClass="MPMainTabBarController" customModule="MeiPaiDemo" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBar key="tabBar" opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" id="HgH-dl-dzp">
+                    <tabBar key="tabBar" opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" barStyle="black" id="HgH-dl-dzp">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -70,9 +70,26 @@
                     <view key="view" contentMode="scaleToFill" id="iSK-1i-crm">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G1g-q8-jxD" userLabel="Record Button">
+                                <rect key="frame" x="260" y="456" width="80" height="80"/>
+                                <color key="backgroundColor" red="1" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="q7X-NG-Beh"/>
+                                    <constraint firstAttribute="width" constant="80" id="yJx-ZQ-myg"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="G1g-q8-jxD" firstAttribute="centerX" secondItem="iSK-1i-crm" secondAttribute="centerX" id="aKu-y3-P7H"/>
+                            <constraint firstItem="k0r-kV-vbY" firstAttribute="top" secondItem="G1g-q8-jxD" secondAttribute="bottom" constant="15" id="tUW-SF-6Pt"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="MeiPai" id="L5E-hC-1O2"/>
+                    <connections>
+                        <outlet property="recordButton" destination="G1g-q8-jxD" id="bn9-7r-Ik8"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bMo-fk-8NL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
