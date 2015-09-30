@@ -14,7 +14,10 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var recordButton: UIView!
     
     private var captureSession: AVCaptureSession?
+    private var captureOutput: AVCaptureMovieFileOutput!
     private var previewLayer: AVCaptureVideoPreviewLayer?
+    
+    private let outputFilePath = NSTemporaryDirectory().stringByAppendingString("myMovie.mov")
     
     // MARK: - Life Circle
     override func viewDidAppear(animated: Bool) {
@@ -35,6 +38,9 @@ class RecordViewController: UIViewController {
         recordButton.layer.cornerRadius = recordButton.bounds.size.width / 2
         recordButton.layer.masksToBounds = true
         
+        let longTap = UILongPressGestureRecognizer(target: self, action: "handleLongGesture:")
+        recordButton.addGestureRecognizer(longTap)
+        
         setupAVFoundation()
     }
 
@@ -48,31 +54,74 @@ class RecordViewController: UIViewController {
     func setupAVFoundation() {
         
         captureSession = AVCaptureSession()
-        let device = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
+        let videoDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
+        let audioDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeAudio)
         
-        let deviceInput: AVCaptureDeviceInput?
+        // input
+        let videoDeviceInput: AVCaptureDeviceInput?
         do {
-            deviceInput = try AVCaptureDeviceInput(device: device)
+            videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice) // video
         } catch _ {
-            deviceInput = nil
+            videoDeviceInput = nil
         }
-       
-        guard let input = deviceInput else {
+        
+        let audioDeviceInput: AVCaptureDeviceInput?
+        do {
+            audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice) // audio
+        } catch _ {
+            audioDeviceInput = nil
+        }
+        
+       // add input
+        guard let videoInput = videoDeviceInput, let audioInput = audioDeviceInput else {
             previewLayer = nil
             captureSession = nil
             return
         }
-        captureSession!.addInput(input)
+        captureSession!.addInput(videoInput)
+        captureSession!.addInput(audioInput)
+        
+        // output
+        captureOutput = AVCaptureMovieFileOutput()
+        let captureConnection = captureOutput.connectionWithMediaType(AVMediaTypeVideo)
+        captureConnection.preferredVideoStabilizationMode = .Auto
+
+        // add output
+        captureSession!.addOutput(captureOutput)
         
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
         previewLayer!.bounds = CGRectMake(0, 0, self.view.bounds.width, self.view.bounds.height * 3 / 4)
         previewLayer!.position = CGPointMake(self.view.bounds.width / 2, self.view.bounds.height * 3 / 4 / 2)
         
-        view.layer .addSublayer(previewLayer!)
-        
-        
+        view.layer.addSublayer(previewLayer!)
         
     }
     
+    // MARK: - Gesture
+    func handleLongGesture(sender: UILongPressGestureRecognizer) {
+        
+        switch sender.state {
+        case .Began:
+            let fileUrl = NSURL.fileURLWithPath(outputFilePath)
+            captureOutput.startRecordingToOutputFileURL(fileUrl, recordingDelegate: self)
+        case .Ended:
+            captureOutput.stopRecording()
+        default:
+            return
+        }
+        
+    }
+    
+}
+
+extension RecordViewController: AVCaptureFileOutputRecordingDelegate {
+    
+    func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
+        
+    }
+    
+    func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
+        
+    }
 }
