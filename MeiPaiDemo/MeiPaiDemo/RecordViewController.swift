@@ -14,9 +14,7 @@ class RecordViewController: UIViewController {
 
     @IBOutlet weak var recordButton: UIView!
     
-    private var captureSession: AVCaptureSession?
-    private var captureOutput: AVCaptureMovieFileOutput!
-    private var previewLayer: AVCaptureVideoPreviewLayer?
+    private var recordVideoView: RecordVideoView!
     
     private let outputFilePath: String = NSTemporaryDirectory().stringByAppendingString("myMovie.mov")
     private var outputFileUrl: NSURL {
@@ -27,13 +25,13 @@ class RecordViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        captureSession?.startRunning()
+        recordVideoView.startRunning()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        captureSession?.stopRunning()
+        recordVideoView.stopRunning()
     }
     
     override func viewDidLoad() {
@@ -45,59 +43,13 @@ class RecordViewController: UIViewController {
         let longTap = UILongPressGestureRecognizer(target: self, action: "handleLongGesture:")
         recordButton.addGestureRecognizer(longTap)
         
-        setupAVFoundation()
+        recordVideoView = RecordVideoView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height * 3 / 4))
+        view.addSubview(recordVideoView)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
 
-    }
-    
-
-    // MARK: -  Custom Method
-    func setupAVFoundation() {
-        
-        captureSession = AVCaptureSession()
-        let videoDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
-        let audioDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeAudio)
-        
-        // input
-        let videoDeviceInput: AVCaptureDeviceInput?
-        do {
-            videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice) // video
-        } catch _ {
-            videoDeviceInput = nil
-        }
-        
-        let audioDeviceInput: AVCaptureDeviceInput?
-        do {
-            audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice) // audio
-        } catch _ {
-            audioDeviceInput = nil
-        }
-        
-       // add input
-        guard let videoInput = videoDeviceInput, let audioInput = audioDeviceInput else {
-            previewLayer = nil
-            captureSession = nil
-            return
-        }
-        captureSession!.addInput(videoInput)
-        captureSession!.addInput(audioInput)
-        
-        // output
-        captureOutput = AVCaptureMovieFileOutput()
-
-        // add output
-        captureSession!.addOutput(captureOutput)
-        
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-        previewLayer!.bounds = CGRectMake(0, 0, self.view.bounds.width, self.view.bounds.height * 3 / 4)
-        previewLayer!.position = CGPointMake(self.view.bounds.width / 2, self.view.bounds.height * 3 / 4 / 2)
-        
-        view.layer.addSublayer(previewLayer!)
-        
     }
     
     func saveToCameraRoll() {
@@ -117,10 +69,9 @@ class RecordViewController: UIViewController {
         
         switch sender.state {
         case .Began:
-            let fileUrl = NSURL.fileURLWithPath(outputFilePath)
-            captureOutput.startRecordingToOutputFileURL(fileUrl, recordingDelegate: self)
+            recordVideoView.startRecordingWithDelegate(self, outputFileUrl: outputFileUrl)
         case .Ended:
-            captureOutput.stopRecording()
+            recordVideoView.stopRecording()
         default:
             return
         }
@@ -137,6 +88,17 @@ extension RecordViewController: AVCaptureFileOutputRecordingDelegate {
     
     func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
         
+        UIAlertView(title: "提示", message: "是否要存入图库？", delegate: self, cancelButtonTitle: "不要", otherButtonTitles: "要").show()
+        
+    }
+}
+
+extension RecordViewController: UIAlertViewDelegate {
+    
+    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
+        guard buttonIndex == 1 else { return }
+        
         saveToCameraRoll()
     }
+    
 }

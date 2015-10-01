@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9838E8DD1BBD2DBB00698408 /* RecordVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838E8DC1BBD2DBB00698408 /* RecordVideoView.swift */; settings = {ASSET_TAGS = (); }; };
+		9838E8E31BBD3FFB00698408 /* HWWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9838E8E21BBD3FFB00698408 /* HWWeakTimer.m */; settings = {ASSET_TAGS = (); }; };
 		98E88B671BBA878D00D4D18D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E88B661BBA878D00D4D18D /* AppDelegate.swift */; };
 		98E88B6C1BBA878D00D4D18D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98E88B6A1BBA878D00D4D18D /* Main.storyboard */; };
 		98E88B6E1BBA878D00D4D18D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98E88B6D1BBA878D00D4D18D /* Assets.xcassets */; };
@@ -18,6 +20,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9838E8DC1BBD2DBB00698408 /* RecordVideoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordVideoView.swift; sourceTree = "<group>"; };
+		9838E8E11BBD3FFB00698408 /* HWWeakTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HWWeakTimer.h; sourceTree = "<group>"; };
+		9838E8E21BBD3FFB00698408 /* HWWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HWWeakTimer.m; sourceTree = "<group>"; };
+		9838E8EA1BBD40B100698408 /* MP-Bridging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MP-Bridging.h"; sourceTree = "<group>"; };
 		98E88B631BBA878D00D4D18D /* MeiPaiDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeiPaiDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98E88B661BBA878D00D4D18D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		98E88B6B1BBA878D00D4D18D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -41,6 +47,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9838E8DE1BBD34B900698408 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				9838E8E01BBD3FFB00698408 /* HWWeakTimer */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+		9838E8E01BBD3FFB00698408 /* HWWeakTimer */ = {
+			isa = PBXGroup;
+			children = (
+				9838E8E11BBD3FFB00698408 /* HWWeakTimer.h */,
+				9838E8E21BBD3FFB00698408 /* HWWeakTimer.m */,
+			);
+			path = HWWeakTimer;
+			sourceTree = "<group>";
+		};
 		98E88B5A1BBA878D00D4D18D = {
 			isa = PBXGroup;
 			children = (
@@ -64,6 +87,7 @@
 				98E88B781BBA8C4800D4D18D /* Model */,
 				98E88B7C1BBA8CB900D4D18D /* View */,
 				98E88B7D1BBA8CD600D4D18D /* ViewController */,
+				9838E8DE1BBD34B900698408 /* Common */,
 				98E88B7A1BBA8C7A00D4D18D /* StoryBoard */,
 				98E88B7B1BBA8C8F00D4D18D /* Resource */,
 				98E88B6F1BBA878D00D4D18D /* LaunchScreen.storyboard */,
@@ -91,6 +115,7 @@
 			children = (
 				98E88B721BBA878D00D4D18D /* Info.plist */,
 				98E88B6D1BBA878D00D4D18D /* Assets.xcassets */,
+				9838E8EA1BBD40B100698408 /* MP-Bridging.h */,
 			);
 			name = Resource;
 			sourceTree = "<group>";
@@ -98,6 +123,7 @@
 		98E88B7C1BBA8CB900D4D18D /* View */ = {
 			isa = PBXGroup;
 			children = (
+				9838E8DC1BBD2DBB00698408 /* RecordVideoView.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -212,6 +238,8 @@
 				98E88B881BBA8F9400D4D18D /* ProfileViewController.swift in Sources */,
 				98E88B841BBA8F3C00D4D18D /* HomeViewController.swift in Sources */,
 				98E88B861BBA8F8100D4D18D /* RecordViewController.swift in Sources */,
+				9838E8DD1BBD2DBB00698408 /* RecordVideoView.swift in Sources */,
+				9838E8E31BBD3FFB00698408 /* HWWeakTimer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +356,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = YY.MeiPaiDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MeiPaiDemo/MP-Bridging.h";
 			};
 			name = Debug;
 		};
@@ -339,6 +368,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = YY.MeiPaiDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MeiPaiDemo/MP-Bridging.h";
 			};
 			name = Release;
 		};
@@ -361,6 +391,7 @@
 				98E88B771BBA878D00D4D18D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
