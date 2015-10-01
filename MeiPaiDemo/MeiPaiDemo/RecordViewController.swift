@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import AssetsLibrary
 
 class RecordViewController: UIViewController {
 
@@ -17,7 +18,10 @@ class RecordViewController: UIViewController {
     private var captureOutput: AVCaptureMovieFileOutput!
     private var previewLayer: AVCaptureVideoPreviewLayer?
     
-    private let outputFilePath = NSTemporaryDirectory().stringByAppendingString("myMovie.mov")
+    private let outputFilePath: String = NSTemporaryDirectory().stringByAppendingString("myMovie.mov")
+    private var outputFileUrl: NSURL {
+        return NSURL.fileURLWithPath(self.outputFilePath)
+    }
     
     // MARK: - Life Circle
     override func viewDidAppear(animated: Bool) {
@@ -83,8 +87,6 @@ class RecordViewController: UIViewController {
         
         // output
         captureOutput = AVCaptureMovieFileOutput()
-        let captureConnection = captureOutput.connectionWithMediaType(AVMediaTypeVideo)
-        captureConnection.preferredVideoStabilizationMode = .Auto
 
         // add output
         captureSession!.addOutput(captureOutput)
@@ -96,6 +98,18 @@ class RecordViewController: UIViewController {
         
         view.layer.addSublayer(previewLayer!)
         
+    }
+    
+    func saveToCameraRoll() {
+        ALAssetsLibrary().writeVideoAtPathToSavedPhotosAlbum(outputFileUrl, completionBlock: { (url: NSURL!, error: NSError?) in
+            
+            if let errorDescription = error?.description {
+                print("写入错误:\(errorDescription)")
+            } else {
+                print("写入成功")
+            }
+            
+        })
     }
     
     // MARK: - Gesture
@@ -118,10 +132,11 @@ class RecordViewController: UIViewController {
 extension RecordViewController: AVCaptureFileOutputRecordingDelegate {
     
     func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
-        
+
     }
     
     func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
         
+        saveToCameraRoll()
     }
 }
