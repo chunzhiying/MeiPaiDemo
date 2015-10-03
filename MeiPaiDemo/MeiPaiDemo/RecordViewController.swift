@@ -13,18 +13,18 @@ import AssetsLibrary
 class RecordViewController: UIViewController {
 
     @IBOutlet weak var recordButton: UIView!
-    
     private var recordVideoView: RecordVideoView!
+    private var loadingBox: LoadingBox? = LoadingBox()
     
-    private let outputFilePath: String = NSTemporaryDirectory().stringByAppendingString("myMovie.mov")
-    private var outputFileUrl: NSURL {
-        return NSURL.fileURLWithPath(self.outputFilePath)
-    }
+    private var model = RecordModel()
+    
+    private var canRecord: Bool = true
     
     // MARK: - Life Circle
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        model.deleteTempVideo()
         recordVideoView.startRunning()
     }
     
@@ -44,6 +44,7 @@ class RecordViewController: UIViewController {
         recordButton.addGestureRecognizer(longTap)
         
         recordVideoView = RecordVideoView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height * 3 / 4))
+        recordVideoView.delegate = self
         view.addSubview(recordVideoView)
     }
 
@@ -52,24 +53,14 @@ class RecordViewController: UIViewController {
 
     }
     
-    func saveToCameraRoll() {
-        ALAssetsLibrary().writeVideoAtPathToSavedPhotosAlbum(outputFileUrl, completionBlock: { (url: NSURL!, error: NSError?) in
-            
-            if let errorDescription = error?.description {
-                print("写入错误:\(errorDescription)")
-            } else {
-                print("写入成功")
-            }
-            
-        })
-    }
-    
     // MARK: - Gesture
     func handleLongGesture(sender: UILongPressGestureRecognizer) {
         
+        guard canRecord else { return }
+        
         switch sender.state {
         case .Began:
-            recordVideoView.startRecordingWithDelegate(self, outputFileUrl: outputFileUrl)
+            recordVideoView.startRecordingWithUrl(model.outputFileUrl)
         case .Ended:
             recordVideoView.stopRecording()
         default:
@@ -80,15 +71,20 @@ class RecordViewController: UIViewController {
     
 }
 
-extension RecordViewController: AVCaptureFileOutputRecordingDelegate {
+extension RecordViewController: MPCaptureFileOutputRecordingDelegate {
     
-    func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
-
+    func mpCaptureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
+        
+        model.addNewVideoFilePath()
     }
     
-    func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
+    func mpCaptureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!, canContinueRecord: Bool) {
         
-        UIAlertView(title: "提示", message: "是否要存入图库？", delegate: self, cancelButtonTitle: "不要", otherButtonTitles: "要").show()
+        if canContinueRecord {
+            UIAlertView(title: "提示", message: "是否要结束录制？", delegate: self, cancelButtonTitle: "No,继续取景", otherButtonTitles: "Yes,存入图库").show()
+        } else {
+             UIAlertView(title: "提示", message: "您最多只能录制30秒，是否要存入图库", delegate: self, cancelButtonTitle: "不要", otherButtonTitles: "要").show()
+        }
         
     }
 }
@@ -98,7 +94,18 @@ extension RecordViewController: UIAlertViewDelegate {
     func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
         guard buttonIndex == 1 else { return }
         
-        saveToCameraRoll()
+        canRecord = false
+        loadingBox?.showInView(view, withText: "处理视频中..")
+        recordVideoView.resetRecordVideoUI()
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){ [weak self] in
+            
+            self?.model.saveToCameraRoll {
+                self?.canRecord = true
+                self?.loadingBox?.hide()
+            }
+        }
+        
     }
     
 }

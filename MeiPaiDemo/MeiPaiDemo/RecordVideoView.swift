@@ -9,7 +9,15 @@
 import UIKit
 import AVFoundation
 
+protocol MPCaptureFileOutputRecordingDelegate: NSObjectProtocol {
+    func mpCaptureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!)
+    
+    func mpCaptureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!, canContinueRecord: Bool)
+}
+
 class RecordVideoView: UIView {
+    
+    weak var delegate: MPCaptureFileOutputRecordingDelegate?
     
     private var captureSession: AVCaptureSession?
     private var captureOutput: AVCaptureMovieFileOutput!
@@ -17,13 +25,19 @@ class RecordVideoView: UIView {
     
     private var tipsView: UILabel!
     private var progress: UISlider!
-    private var timer: NSTimer!
+    private var timer: NSTimer?
+    
+    private let maxVideoLength: Float = 30
+    private var timerCount: Float  = 0 {
+        didSet {
+            progress.value = timerCount
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         initView()
-        
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -32,7 +46,9 @@ class RecordVideoView: UIView {
         initView()
     }
     
-    
+    deinit {
+        deinitTimer()
+    }
     
     // MARK: -  Custom Method
     func initView() {
@@ -97,16 +113,11 @@ class RecordVideoView: UIView {
             progress.enabled = false
             
             progress.minimumValue = 0
-            progress.maximumValue = 30
-            
-            progress.value = 15
+            progress.maximumValue = Float(maxVideoLength)
             
             addSubview(progress)
         }
         
-        func setTimer() {
-            timer = HWWeakTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "timeOut", userInfo: nil, repeats: true)
-        }
         
         setAVFoundation()
         setTipsView()
@@ -114,12 +125,27 @@ class RecordVideoView: UIView {
         
     }
     
-    func timeOut() {
-        
+    
+    // MARK: - Timer
+    func setTimer() {
+        timer = HWWeakTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "timeOut", userInfo: nil, repeats: true)
     }
     
-    func uinitTimer() {
+    func timeOut() {
+        guard timerCount < maxVideoLength else {
+            timerCount = 0
+            stopRecording()
+            return
+        }
         
+        timerCount += 0.5
+    }
+    
+    func deinitTimer() {
+        if timer != nil {
+            timer!.invalidate()
+            timer = nil
+        }
     }
     
     func showTipsView() {
@@ -154,14 +180,33 @@ class RecordVideoView: UIView {
         captureSession?.stopRunning()
     }
     
-    func startRecordingWithDelegate(delegate: AVCaptureFileOutputRecordingDelegate, outputFileUrl: NSURL) {
-        captureOutput.startRecordingToOutputFileURL(outputFileUrl, recordingDelegate: delegate)
+    func startRecordingWithUrl(outputFileUrl: NSURL) {
+        captureOutput.startRecordingToOutputFileURL(outputFileUrl, recordingDelegate: self)
         showTipsView()
+        setTimer()
     }
     
     func stopRecording() {
         captureOutput.stopRecording()
         hideTipsView()
+        deinitTimer()
     }
+    
+    func resetRecordVideoUI() {
+        timerCount = 0
+    }
+}
+
+
+extension RecordVideoView: AVCaptureFileOutputRecordingDelegate {
+    
+    func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
+        delegate?.mpCaptureOutput(captureOutput, didStartRecordingToOutputFileAtURL: fileURL, fromConnections: connections)
+    }
+    
+    func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
+        delegate?.mpCaptureOutput(captureOutput, didFinishRecordingToOutputFileAtURL: outputFileURL, fromConnections: connections, error: error, canContinueRecord: timerCount < maxVideoLength && timerCount > 0)
+    }
+
     
 }

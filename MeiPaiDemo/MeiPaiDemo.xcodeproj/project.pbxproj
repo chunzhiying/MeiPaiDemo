@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		9838E8DD1BBD2DBB00698408 /* RecordVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838E8DC1BBD2DBB00698408 /* RecordVideoView.swift */; settings = {ASSET_TAGS = (); }; };
 		9838E8E31BBD3FFB00698408 /* HWWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9838E8E21BBD3FFB00698408 /* HWWeakTimer.m */; settings = {ASSET_TAGS = (); }; };
+		9869A7261BBFC7AC002496A1 /* LoadingBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 9869A7241BBFC7AC002496A1 /* LoadingBox.m */; settings = {ASSET_TAGS = (); }; };
+		9869A7271BBFC7AC002496A1 /* LoadingBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9869A7251BBFC7AC002496A1 /* LoadingBox.xib */; settings = {ASSET_TAGS = (); }; };
+		9869A72D1BBFCCC5002496A1 /* RecordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9869A72C1BBFCCC5002496A1 /* RecordModel.swift */; settings = {ASSET_TAGS = (); }; };
 		98E88B671BBA878D00D4D18D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E88B661BBA878D00D4D18D /* AppDelegate.swift */; };
 		98E88B6C1BBA878D00D4D18D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98E88B6A1BBA878D00D4D18D /* Main.storyboard */; };
 		98E88B6E1BBA878D00D4D18D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98E88B6D1BBA878D00D4D18D /* Assets.xcassets */; };
@@ -24,6 +27,10 @@
 		9838E8E11BBD3FFB00698408 /* HWWeakTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HWWeakTimer.h; sourceTree = "<group>"; };
 		9838E8E21BBD3FFB00698408 /* HWWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HWWeakTimer.m; sourceTree = "<group>"; };
 		9838E8EA1BBD40B100698408 /* MP-Bridging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MP-Bridging.h"; sourceTree = "<group>"; };
+		9869A7231BBFC7AC002496A1 /* LoadingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingBox.h; sourceTree = "<group>"; };
+		9869A7241BBFC7AC002496A1 /* LoadingBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingBox.m; sourceTree = "<group>"; };
+		9869A7251BBFC7AC002496A1 /* LoadingBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoadingBox.xib; sourceTree = "<group>"; };
+		9869A72C1BBFCCC5002496A1 /* RecordModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordModel.swift; sourceTree = "<group>"; };
 		98E88B631BBA878D00D4D18D /* MeiPaiDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeiPaiDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98E88B661BBA878D00D4D18D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		98E88B6B1BBA878D00D4D18D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -50,6 +57,7 @@
 		9838E8DE1BBD34B900698408 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				9869A7221BBFC7AC002496A1 /* LoadingBox */,
 				9838E8E01BBD3FFB00698408 /* HWWeakTimer */,
 			);
 			name = Common;
@@ -62,6 +70,24 @@
 				9838E8E21BBD3FFB00698408 /* HWWeakTimer.m */,
 			);
 			path = HWWeakTimer;
+			sourceTree = "<group>";
+		};
+		9869A7221BBFC7AC002496A1 /* LoadingBox */ = {
+			isa = PBXGroup;
+			children = (
+				9869A7231BBFC7AC002496A1 /* LoadingBox.h */,
+				9869A7241BBFC7AC002496A1 /* LoadingBox.m */,
+				9869A7251BBFC7AC002496A1 /* LoadingBox.xib */,
+			);
+			path = LoadingBox;
+			sourceTree = "<group>";
+		};
+		9869A7281BBFCC95002496A1 /* MeiPai */ = {
+			isa = PBXGroup;
+			children = (
+				9869A72C1BBFCCC5002496A1 /* RecordModel.swift */,
+			);
+			name = MeiPai;
 			sourceTree = "<group>";
 		};
 		98E88B5A1BBA878D00D4D18D = {
@@ -98,6 +124,7 @@
 		98E88B781BBA8C4800D4D18D /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				9869A7281BBFCC95002496A1 /* MeiPai */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -222,6 +249,7 @@
 			files = (
 				98E88B711BBA878D00D4D18D /* LaunchScreen.storyboard in Resources */,
 				98E88B6E1BBA878D00D4D18D /* Assets.xcassets in Resources */,
+				9869A7271BBFC7AC002496A1 /* LoadingBox.xib in Resources */,
 				98E88B6C1BBA878D00D4D18D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -235,10 +263,12 @@
 			files = (
 				98E88B671BBA878D00D4D18D /* AppDelegate.swift in Sources */,
 				98E88B7F1BBA8E0A00D4D18D /* MPMainTabBarController.swift in Sources */,
+				9869A72D1BBFCCC5002496A1 /* RecordModel.swift in Sources */,
 				98E88B881BBA8F9400D4D18D /* ProfileViewController.swift in Sources */,
 				98E88B841BBA8F3C00D4D18D /* HomeViewController.swift in Sources */,
 				98E88B861BBA8F8100D4D18D /* RecordViewController.swift in Sources */,
 				9838E8DD1BBD2DBB00698408 /* RecordVideoView.swift in Sources */,
+				9869A7261BBFC7AC002496A1 /* LoadingBox.m in Sources */,
 				9838E8E31BBD3FFB00698408 /* HWWeakTimer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

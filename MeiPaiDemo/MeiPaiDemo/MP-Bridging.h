@@ -11,5 +11,6 @@
 #define MP_Bridging_h
 
 #import "HWWeakTimer.h"
+#import "LoadingBox.h"
 
 #endif /* MP_Bridging_h */
