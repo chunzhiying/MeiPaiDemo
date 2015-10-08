@@ -75,7 +75,7 @@ class RecordViewController: UIViewController {
         loadingBox?.showInView(view, withText: "处理视频中..")
         recordVideoView.resetRecordVideoUI()
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){ [weak self] in
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { [weak self] in
             
             self?.model.saveToCameraRoll {
                 self?.canRecord = true
@@ -99,7 +99,7 @@ extension RecordViewController: MPCaptureFileOutputRecordingDelegate {
         if canContinueRecord {
             
             let alertController = UIAlertController(title: "提示", message: "是否要结束录制", preferredStyle: .Alert)
-            let cancelAction = UIAlertAction(title: "No,继续取景", style: .Cancel) { _ in }
+            let cancelAction = UIAlertAction(title: "No,继续取景", style: .Cancel, handler: nil)
             let confirmAction = UIAlertAction(title: "Yes,存入图库", style: .Default) { [weak self] _ in
                 self?.handleAlertController()
             }

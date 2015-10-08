@@ -55,6 +55,8 @@ class RecordVideoView: UIView {
         
         func setAVFoundation() {
             captureSession = AVCaptureSession()
+            captureSession?.beginConfiguration()
+            
             let videoDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
             let audioDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeAudio)
             
@@ -94,12 +96,17 @@ class RecordVideoView: UIView {
             previewLayer!.position = CGPointMake(bounds.size.width / 2, bounds.size.height / 2)
             
             layer.addSublayer(previewLayer!)
+            
+            captureSession?.commitConfiguration()
         }
         
         func setTipsView() {
             tipsView = UILabel(frame: CGRectMake((bounds.width - 100) / 2, bounds.height - 45, 100, 30))
             tipsView.backgroundColor = UIColor.blackColor()
             tipsView.alpha = 0
+            
+            tipsView.layer.cornerRadius = 0.5
+            tipsView.layer.masksToBounds = true
             
             tipsView.font = UIFont.systemFontOfSize(13)
             tipsView.textColor = UIColor.whiteColor()
