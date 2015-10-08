@@ -69,6 +69,22 @@ class RecordViewController: UIViewController {
         
     }
     
+    // MARK: - Alert Handle
+    func handleAlertController() {
+        canRecord = false
+        loadingBox?.showInView(view, withText: "处理视频中..")
+        recordVideoView.resetRecordVideoUI()
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){ [weak self] in
+            
+            self?.model.saveToCameraRoll {
+                self?.canRecord = true
+                self?.loadingBox?.hide()
+            }
+        }
+
+    }
+    
 }
 
 extension RecordViewController: MPCaptureFileOutputRecordingDelegate {
@@ -81,31 +97,28 @@ extension RecordViewController: MPCaptureFileOutputRecordingDelegate {
     func mpCaptureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!, canContinueRecord: Bool) {
         
         if canContinueRecord {
-            UIAlertView(title: "提示", message: "是否要结束录制？", delegate: self, cancelButtonTitle: "No,继续取景", otherButtonTitles: "Yes,存入图库").show()
+            
+            let alertController = UIAlertController(title: "提示", message: "是否要结束录制", preferredStyle: .Alert)
+            let cancelAction = UIAlertAction(title: "No,继续取景", style: .Cancel) { _ in }
+            let confirmAction = UIAlertAction(title: "Yes,存入图库", style: .Default) { [weak self] _ in
+                self?.handleAlertController()
+            }
+            
+            alertController.addAction(confirmAction)
+            alertController.addAction(cancelAction)
+            self.presentViewController(alertController, animated: true, completion: nil)
+            
         } else {
-             UIAlertView(title: "提示", message: "您最多只能录制30秒，是否要存入图库", delegate: self, cancelButtonTitle: "不要", otherButtonTitles: "要").show()
+            
+            let alertController = UIAlertController(title: "提示", message: "您最多只能录制30秒！", preferredStyle: .Alert)
+            let confirmAction = UIAlertAction(title: "确定", style: .Default) { [weak self] _ in
+                self?.handleAlertController()
+            }
+            
+            alertController.addAction(confirmAction)
+            self.presentViewController(alertController, animated: true, completion: nil)
         }
         
     }
 }
 
-extension RecordViewController: UIAlertViewDelegate {
-    
-    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
-        guard buttonIndex == 1 else { return }
-        
-        canRecord = false
-        loadingBox?.showInView(view, withText: "处理视频中..")
-        recordVideoView.resetRecordVideoUI()
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){ [weak self] in
-            
-            self?.model.saveToCameraRoll {
-                self?.canRecord = true
-                self?.loadingBox?.hide()
-            }
-        }
-        
-    }
-    
-}
