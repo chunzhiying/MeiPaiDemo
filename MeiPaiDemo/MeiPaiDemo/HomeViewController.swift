@@ -10,9 +10,14 @@ import UIKit
 
 class HomeViewController: UIViewController {
 
+    @IBOutlet weak var collectionView: UICollectionView!
+    private let model = HomeModel()
+    
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        model.getVideoFromPhotoApp()
         // Do any additional setup after loading the view.
     }
 
@@ -21,15 +26,19 @@ class HomeViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    
+}
 
-    /*
-    // MARK: - Navigation
+extension HomeViewController: UICollectionViewDataSource {
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return model.assetAry.count
     }
-    */
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        
+        var cell = collectionView.dequeueReusableCellWithReuseIdentifier("AssetCell", forIndexPath: indexPath) as! VideoCell
+        
+    }
 
 }

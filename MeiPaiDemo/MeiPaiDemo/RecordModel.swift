@@ -34,20 +34,69 @@ class RecordModel {
     // MARK: - Private Handel Video
     func saveToCameraRoll(completion: () -> Void) {
         
-        func mergeVideo() {
-            let ary = outputFileUrlAry
-            let assertAry = ary.map({ return AVAsset(URL: $0) })
+        func createEndingVideo() {
+            
+            let endAsset = AVAsset(URL: outputFileUrlAry.last!)
             
             let mixComposition = AVMutableComposition()
             var instructionAry = [AVMutableVideoCompositionLayerInstruction]()
             let mainInstruction = AVMutableVideoCompositionInstruction()
             
+            let endTrack = mixComposition.addMutableTrackWithMediaType(AVMediaTypeVideo, preferredTrackID: kCMPersistentTrackID_Invalid)
+            do {
+                try endTrack.insertTimeRange(CMTimeRangeMake(kCMTimeZero,endAsset.duration),
+                    ofTrack: endAsset.tracksWithMediaType(AVMediaTypeVideo).first!,
+                    atTime: kCMTimeZero)
+            } catch  {
+                return
+            }
+            
+            let endInstruction = videoCompositionInstructionForTrack(endTrack, asset: endAsset)
+
+            instructionAry += [endInstruction]
+            
+            mainInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, endAsset.duration)
+            mainInstruction.layerInstructions = instructionAry
+            
+            // 处理特效
+            let mainComposition = AVMutableVideoComposition()
+            mainComposition.frameDuration = CMTimeMake(1, 30)
+            mainComposition.instructions = [mainInstruction]
+            mainComposition.renderSize = UIScreen.mainScreen().bounds.size
+            
+            applyVideoEffectsToComposition(mainComposition, rect: UIScreen.mainScreen().bounds)
+            
+            let exporter = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality)
+            exporter?.outputURL = outputFileUrl
+            exporter?.outputFileType = AVFileTypeQuickTimeMovie;
+            exporter?.shouldOptimizeForNetworkUse = true;
+            exporter?.videoComposition = mainComposition
+            
+            
+            exporter?.exportAsynchronouslyWithCompletionHandler() {
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.outputFilePathAry += [self.outputFilePath]
+                    mergeVideoWithUrlAry()
+                }
+            }
+        }
+        
+        func mergeVideoWithUrlAry() {
+            
+            let assertAry = outputFileUrlAry.map({ return AVAsset(URL: $0) })
+            let endAsset = AVAsset(URL: outputFileUrlAry.last!)
+            
+            let mixComposition = AVMutableComposition()
+            var instructionAry = [AVMutableVideoCompositionLayerInstruction]()
+            let mainInstruction = AVMutableVideoCompositionInstruction()
+            
+            // 正片的track
             let videoTrack = mixComposition.addMutableTrackWithMediaType(AVMediaTypeVideo, preferredTrackID: kCMPersistentTrackID_Invalid)
             
             var videoTimeDuration = kCMTimeZero
-            for var i = 0; i < assertAry.count; i++ {
-                let assert = assertAry[i]
+            for var i = 0; i < assertAry.count - 1; i++ {
                 
+                let assert = assertAry[i]
                 do {
                     try videoTrack.insertTimeRange(CMTimeRangeMake(kCMTimeZero, assert.duration),
                         ofTrack: assert.tracksWithMediaType(AVMediaTypeVideo).first!,
@@ -59,12 +108,24 @@ class RecordModel {
                  videoTimeDuration = CMTimeAdd(videoTimeDuration, assert.duration)
             }
             
-            // 处理方向，只是用一个video track，把assert都插入到这个track, 通过第一个assert来作为代表判断方向
-            let instruction = videoCompositionInstructionForTrack(videoTrack, asset: assertAry.first!)
-            instruction.setOpacity(0, atTime: videoTimeDuration)
-            instructionAry += [instruction]
+            let instruction = videoCompositionInstructionForTrack(videoTrack, asset:assertAry.first!)
+            instruction.setOpacity(0, atTime: videoTimeDuration) //遮挡后面轨道的图像
             
-            mainInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, videoTimeDuration)
+            // 片尾的track
+            let endTrack = mixComposition.addMutableTrackWithMediaType(AVMediaTypeVideo, preferredTrackID: kCMPersistentTrackID_Invalid)
+            do {
+                try endTrack.insertTimeRange(CMTimeRangeMake(kCMTimeZero, endAsset.duration),
+                    ofTrack: endAsset.tracksWithMediaType(AVMediaTypeVideo).first!,
+                    atTime: videoTimeDuration)
+            } catch  {
+                return
+            }
+            let endInstruction = videoCompositionInstructionForTrack(endTrack, asset: endAsset)
+            
+            instructionAry += [instruction]
+            instructionAry += [endInstruction]
+            
+            mainInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, CMTimeAdd(videoTimeDuration, endAsset.duration))
             mainInstruction.layerInstructions = instructionAry
 
             // 处理特效
@@ -73,16 +134,16 @@ class RecordModel {
             mainComposition.instructions = [mainInstruction]
             mainComposition.renderSize = UIScreen.mainScreen().bounds.size
             
-            applyVideoEffectsToComposition(mainComposition, rect: UIScreen.mainScreen().bounds)
-            
             let exporter = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality)
             exporter?.outputURL = finalUrl
             exporter?.outputFileType = AVFileTypeQuickTimeMovie;
             exporter?.shouldOptimizeForNetworkUse = true;
             exporter?.videoComposition = mainComposition
             
-            exporter?.exportAsynchronouslyWithCompletionHandler(){
-                dispatch_async(dispatch_get_main_queue()){
+            
+            exporter?.exportAsynchronouslyWithCompletionHandler() {
+                dispatch_async(dispatch_get_main_queue()) {
+                    
                     saveVideo(exporter!)
                 }
             }
@@ -98,6 +159,7 @@ class RecordModel {
                     } else {
                         print("写入成功")
                     }
+                    
                     self.deleteTempVideo()
                     completion()
                 }
@@ -105,8 +167,9 @@ class RecordModel {
             }
         }
         
-        
-        mergeVideo()
+        // 先制作片尾(为了可以自定义动画在上面) -> 正片为一个track、片尾为另一个track
+        createEndingVideo()
+    
     }
     
     func deleteTempVideo() {
@@ -157,7 +220,7 @@ class RecordModel {
         let assetInfo = orientationFromTransform(transform)
         var scaleToFitRatio = UIScreen.mainScreen().bounds.width / assetTrack.naturalSize.width
         
-        if assetInfo.isPortrait {
+        if assetInfo.isPortrait { // 竖屏拍摄
 
             scaleToFitRatio = UIScreen.mainScreen().bounds.width / assetTrack.naturalSize.height
             let scaleFactor = CGAffineTransformMakeScale(scaleToFitRatio, scaleToFitRatio)
@@ -166,22 +229,55 @@ class RecordModel {
             
         } else {
 
-            let scaleFactor = CGAffineTransformMakeScale(scaleToFitRatio, scaleToFitRatio)
-            var concat = CGAffineTransformConcat(CGAffineTransformConcat(assetTrack.preferredTransform, scaleFactor), CGAffineTransformMakeTranslation(0, UIScreen.mainScreen().bounds.width / 2))
-            if assetInfo.orientation == .Down {
-                let fixUpsideDown = CGAffineTransformMakeRotation(CGFloat(M_PI))
-                let windowBounds = UIScreen.mainScreen().bounds
-                let yFix = assetTrack.naturalSize.height + windowBounds.height
-                let centerFix = CGAffineTransformMakeTranslation(assetTrack.naturalSize.width, yFix)
-                concat = CGAffineTransformConcat(CGAffineTransformConcat(fixUpsideDown, centerFix), scaleFactor)
-            }
-            instruction.setTransform(concat, atTime: kCMTimeZero)
+//            let scaleFactor = CGAffineTransformMakeScale(scaleToFitRatio, scaleToFitRatio)
+//            var concat = CGAffineTransformConcat(CGAffineTransformConcat(assetTrack.preferredTransform, scaleFactor), CGAffineTransformMakeTranslation(0, UIScreen.mainScreen().bounds.width / 2))
+//            if assetInfo.orientation == .Down {
+//                let fixUpsideDown = CGAffineTransformMakeRotation(CGFloat(M_PI))
+//                let windowBounds = UIScreen.mainScreen().bounds
+//                let yFix = assetTrack.naturalSize.height + windowBounds.height
+//                let centerFix = CGAffineTransformMakeTranslation(assetTrack.naturalSize.width, yFix)
+//                concat = CGAffineTransformConcat(CGAffineTransformConcat(fixUpsideDown, centerFix), scaleFactor)
+//            }
+//            instruction.setTransform(concat, atTime: kCMTimeZero)
         }
         
         return instruction
     }
     
     func applyVideoEffectsToComposition(composition: AVMutableVideoComposition, rect: CGRect) {
+        
+        let videoLayer = CALayer()
+        let parentLayer = CALayer()
+        let maskLayer = CALayer()
+        let textLayer = CATextLayer()
+        
+        maskLayer.frame = rect
+        videoLayer.frame = rect
+        parentLayer.frame = rect
+        textLayer.string = "chun.."
+        textLayer.position = CGPointMake(rect.size.width / 2, rect.size.height / 2)
+        
+        parentLayer.addSublayer(videoLayer)
+        parentLayer.addSublayer(maskLayer)
+        parentLayer.addSublayer(textLayer)
+        
+        composition.animationTool = AVVideoCompositionCoreAnimationTool(postProcessingAsVideoLayer: videoLayer, inLayer: parentLayer)
+        
+        let contentImage = CIImage(CGImage: (UIImage(named: "Baby-Lufy")?.CGImage)!)
+        let context = CIContext(options: nil)
+        let filter = CIFilter(name: "CIGaussianBlur")
+        filter?.setValue(contentImage, forKey: kCIInputImageKey)
+        filter?.setValue(2, forKey: "inputRadius")
+        
+        guard let filterCIImage = filter?.outputImage else { return }
+        
+        let filterImage = context.createCGImage(filterCIImage, fromRect: filterCIImage.extent)
+        
+        let transition = CATransition()
+        transition.type = kCATransitionFade
+        transition.duration = 1
+        maskLayer.addAnimation(transition, forKey: nil)
+        maskLayer.contents = filterImage
         
     }
     

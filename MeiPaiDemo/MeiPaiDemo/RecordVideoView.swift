@@ -27,7 +27,7 @@ class RecordVideoView: UIView {
     private var progress: UISlider!
     private var timer: NSTimer?
     
-    private let maxVideoLength: Float = 30
+    private let maxVideoLength: Float = 10
     private var timerCount: Float  = 0 {
         didSet {
             progress.value = timerCount
@@ -96,7 +96,6 @@ class RecordVideoView: UIView {
             previewLayer!.position = CGPointMake(bounds.size.width / 2, bounds.size.height / 2)
             
             layer.addSublayer(previewLayer!)
-            
             captureSession?.commitConfiguration()
         }
         

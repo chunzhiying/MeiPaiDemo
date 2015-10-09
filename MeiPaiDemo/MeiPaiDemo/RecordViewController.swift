@@ -110,7 +110,7 @@ extension RecordViewController: MPCaptureFileOutputRecordingDelegate {
             
         } else {
             
-            let alertController = UIAlertController(title: "提示", message: "您最多只能录制30秒！", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "提示", message: "您最多只能录制10秒！", preferredStyle: .Alert)
             let confirmAction = UIAlertAction(title: "确定", style: .Default) { [weak self] _ in
                 self?.handleAlertController()
             }
