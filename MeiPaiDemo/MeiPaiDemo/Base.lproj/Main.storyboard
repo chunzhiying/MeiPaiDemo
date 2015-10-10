@@ -28,7 +28,7 @@
             <objects>
                 <navigationController id="74P-Sn-YUh" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Home" id="639-zy-x2C"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="blackTranslucent" id="g0G-Hp-44W">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="blackTranslucent" translucent="NO" id="g0G-Hp-44W">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -49,34 +49,43 @@
                         <viewControllerLayoutGuide type="bottom" id="maI-MO-bHR"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="qUS-0c-7hx">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="bOf-BZ-JXa">
-                                <rect key="frame" x="188" y="216" width="240" height="128"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Oa5-9A-hAO">
-                                    <size key="itemSize" width="50" height="50"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Oa5-9A-hAO">
+                                    <size key="itemSize" width="120" height="120"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <inset key="sectionInset" minX="5" minY="5" maxX="0.0" maxY="5"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetCell" id="VvL-a6-REK" customClass="VideoCell" customModule="MeiPaiDemo" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="64" width="50" height="50"/>
+                                        <rect key="frame" x="5" y="5" width="120" height="120"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="IMe-pc-npH">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
+                                                </imageView>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="live_play" translatesAutoresizingMaskIntoConstraints="NO" id="NfY-vb-GhH">
+                                                    <rect key="frame" x="2" y="85" width="33" height="33"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="33" id="Ziy-zO-XMa"/>
+                                                        <constraint firstAttribute="height" constant="33" id="ekw-g3-ewV"/>
+                                                    </constraints>
                                                 </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="IMe-pc-npH" secondAttribute="trailing" id="FK2-RQ-KBr"/>
+                                            <constraint firstAttribute="bottom" secondItem="NfY-vb-GhH" secondAttribute="bottom" constant="2" id="Lgn-l5-7F4"/>
+                                            <constraint firstItem="NfY-vb-GhH" firstAttribute="leading" secondItem="VvL-a6-REK" secondAttribute="leading" constant="2" id="Wtv-Du-1sV"/>
                                             <constraint firstItem="IMe-pc-npH" firstAttribute="top" secondItem="VvL-a6-REK" secondAttribute="top" id="beC-uO-rFY"/>
                                             <constraint firstAttribute="bottom" secondItem="IMe-pc-npH" secondAttribute="bottom" id="boD-th-xCZ"/>
                                             <constraint firstItem="IMe-pc-npH" firstAttribute="leading" secondItem="VvL-a6-REK" secondAttribute="leading" id="qQ6-8M-IqJ"/>
@@ -199,4 +208,7 @@
             <point key="canvasLocation" x="786" y="568"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="live_play" width="33" height="33"/>
+    </resources>
 </document>

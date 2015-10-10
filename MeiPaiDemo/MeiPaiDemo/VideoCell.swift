@@ -9,7 +9,11 @@
 import UIKit
 
 class VideoCell: UICollectionViewCell {
- 
+    
+    var image: UIImage? { didSet {
+            imageView.image = image
+        }
+    }
     
     @IBOutlet private weak var imageView: UIImageView!
     

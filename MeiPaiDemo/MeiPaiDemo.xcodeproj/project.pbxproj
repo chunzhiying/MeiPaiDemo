@@ -12,7 +12,7 @@
 		9869A7261BBFC7AC002496A1 /* LoadingBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 9869A7241BBFC7AC002496A1 /* LoadingBox.m */; settings = {ASSET_TAGS = (); }; };
 		9869A7271BBFC7AC002496A1 /* LoadingBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9869A7251BBFC7AC002496A1 /* LoadingBox.xib */; settings = {ASSET_TAGS = (); }; };
 		9869A72D1BBFCCC5002496A1 /* RecordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9869A72C1BBFCCC5002496A1 /* RecordModel.swift */; settings = {ASSET_TAGS = (); }; };
-		98B23E6F1BC7B7C000D4189F /* HomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B23E6E1BC7B7C000D4189F /* HomeModel.swift */; settings = {ASSET_TAGS = (); }; };
+		98B23E6F1BC7B7C000D4189F /* PhotosModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B23E6E1BC7B7C000D4189F /* PhotosModel.swift */; settings = {ASSET_TAGS = (); }; };
 		98B23E711BC7D32300D4189F /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B23E701BC7D32300D4189F /* VideoCell.swift */; settings = {ASSET_TAGS = (); }; };
 		98E88B671BBA878D00D4D18D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E88B661BBA878D00D4D18D /* AppDelegate.swift */; };
 		98E88B6C1BBA878D00D4D18D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98E88B6A1BBA878D00D4D18D /* Main.storyboard */; };
@@ -33,7 +33,7 @@
 		9869A7241BBFC7AC002496A1 /* LoadingBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingBox.m; sourceTree = "<group>"; };
 		9869A7251BBFC7AC002496A1 /* LoadingBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoadingBox.xib; sourceTree = "<group>"; };
 		9869A72C1BBFCCC5002496A1 /* RecordModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordModel.swift; sourceTree = "<group>"; };
-		98B23E6E1BC7B7C000D4189F /* HomeModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeModel.swift; sourceTree = "<group>"; };
+		98B23E6E1BC7B7C000D4189F /* PhotosModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosModel.swift; sourceTree = "<group>"; };
 		98B23E701BC7D32300D4189F /* VideoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		98E88B631BBA878D00D4D18D /* MeiPaiDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeiPaiDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98E88B661BBA878D00D4D18D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -97,7 +97,7 @@
 		98B23E6D1BC7B79C00D4189F /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				98B23E6E1BC7B7C000D4189F /* HomeModel.swift */,
+				98B23E6E1BC7B7C000D4189F /* PhotosModel.swift */,
 			);
 			name = Home;
 			sourceTree = "<group>";
@@ -284,7 +284,7 @@
 				9838E8DD1BBD2DBB00698408 /* RecordVideoView.swift in Sources */,
 				98B23E711BC7D32300D4189F /* VideoCell.swift in Sources */,
 				9869A7261BBFC7AC002496A1 /* LoadingBox.m in Sources */,
-				98B23E6F1BC7B7C000D4189F /* HomeModel.swift in Sources */,
+				98B23E6F1BC7B7C000D4189F /* PhotosModel.swift in Sources */,
 				9838E8E31BBD3FFB00698408 /* HWWeakTimer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
