@@ -28,7 +28,7 @@
             <objects>
                 <navigationController id="74P-Sn-YUh" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Home" id="639-zy-x2C"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="blackTranslucent" translucent="NO" id="g0G-Hp-44W">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="blackTranslucent" id="g0G-Hp-44W">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -49,11 +49,11 @@
                         <viewControllerLayoutGuide type="bottom" id="maI-MO-bHR"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="qUS-0c-7hx">
-                        <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="bOf-BZ-JXa">
-                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="bOf-BZ-JXa">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Oa5-9A-hAO">
                                     <size key="itemSize" width="120" height="120"/>
@@ -63,7 +63,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetCell" id="VvL-a6-REK" customClass="VideoCell" customModule="MeiPaiDemo" customModuleProvider="target">
-                                        <rect key="frame" x="5" y="5" width="120" height="120"/>
+                                        <rect key="frame" x="5" y="69" width="120" height="120"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
@@ -103,10 +103,10 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="bOf-BZ-JXa" firstAttribute="leading" secondItem="qUS-0c-7hx" secondAttribute="leading" id="N5h-iD-Emu"/>
-                            <constraint firstAttribute="trailing" secondItem="bOf-BZ-JXa" secondAttribute="trailing" id="VWU-np-clI"/>
-                            <constraint firstItem="bOf-BZ-JXa" firstAttribute="top" secondItem="L6b-Bg-igy" secondAttribute="bottom" id="XIC-Y2-WMR"/>
-                            <constraint firstItem="maI-MO-bHR" firstAttribute="top" secondItem="bOf-BZ-JXa" secondAttribute="bottom" id="c1E-MH-8A9"/>
+                            <constraint firstItem="maI-MO-bHR" firstAttribute="top" secondItem="bOf-BZ-JXa" secondAttribute="bottom" id="W2V-iZ-eVd"/>
+                            <constraint firstItem="bOf-BZ-JXa" firstAttribute="leading" secondItem="qUS-0c-7hx" secondAttribute="leading" id="XGV-ja-RYb"/>
+                            <constraint firstItem="bOf-BZ-JXa" firstAttribute="top" secondItem="qUS-0c-7hx" secondAttribute="top" id="eYG-wJ-0q6"/>
+                            <constraint firstAttribute="trailing" secondItem="bOf-BZ-JXa" secondAttribute="trailing" id="haS-vx-Ac5"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Home" id="IX2-Yc-SxM"/>
@@ -117,6 +117,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="75v-y0-eOU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1552" y="-103"/>
+        </scene>
+        <!--Play View Controller-->
+        <scene sceneID="R5U-dk-ek9">
+            <objects>
+                <viewController storyboardIdentifier="PlayViewController" id="tqH-NB-SBY" customClass="PlayViewController" customModule="MeiPaiDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="MaH-7M-Loe"/>
+                        <viewControllerLayoutGuide type="bottom" id="bs9-ZL-8hR"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="swv-eV-joB">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GKy-P3-fdm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2203" y="-103"/>
         </scene>
         <!--MeiPai-->
         <scene sceneID="hBk-6e-xb9">
@@ -165,7 +183,28 @@
                     <view key="view" contentMode="scaleToFill" id="wV1-ts-TAJ">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" misplaced="YES" image="152" translatesAutoresizingMaskIntoConstraints="NO" id="UfP-JM-elM">
+                                <rect key="frame" x="126" y="212" width="100" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="t7S-Br-obA"/>
+                                    <constraint firstAttribute="height" constant="100" id="vdR-vN-MZa"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="chun.美拍" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LNs-9v-esg">
+                                <rect key="frame" x="137" y="332.5" width="77" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="orN-cw-jWz" firstAttribute="top" secondItem="LNs-9v-esg" secondAttribute="bottom" constant="40" id="A89-IT-UGv"/>
+                            <constraint firstItem="UfP-JM-elM" firstAttribute="centerX" secondItem="wV1-ts-TAJ" secondAttribute="centerX" id="Nog-DY-eoH"/>
+                            <constraint firstItem="UfP-JM-elM" firstAttribute="centerY" secondItem="wV1-ts-TAJ" secondAttribute="centerY" constant="-100" id="b6H-R4-tXT"/>
+                            <constraint firstItem="LNs-9v-esg" firstAttribute="centerX" secondItem="wV1-ts-TAJ" secondAttribute="centerX" id="z2m-mb-xby"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Me" id="87e-LE-bji"/>
                 </viewController>
@@ -209,6 +248,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="152" width="76" height="76"/>
         <image name="live_play" width="33" height="33"/>
     </resources>
 </document>

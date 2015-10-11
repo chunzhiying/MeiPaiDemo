@@ -69,3 +69,20 @@ extension HomeViewController: UICollectionViewDataSource {
 
 }
 
+extension HomeViewController: UICollectionViewDelegate {
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        model.getVideoAssetByAsset(model.assetAry[indexPath.section * numberOfPerRow + indexPath.item]) { [weak self] asset in
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                let play = PlayViewController.toPlayViewControllerWithAsset(asset)
+                self?.navigationController?.pushViewController(play, animated: true)
+            }
+            
+        }
+        
+    }
+    
+}
+

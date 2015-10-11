@@ -22,6 +22,8 @@
 		98E88B841BBA8F3C00D4D18D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E88B831BBA8F3C00D4D18D /* HomeViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		98E88B861BBA8F8100D4D18D /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E88B851BBA8F8100D4D18D /* RecordViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		98E88B881BBA8F9400D4D18D /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E88B871BBA8F9400D4D18D /* ProfileViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		98F970A21BC9F8A00033E231 /* PlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F970A11BC9F8A00033E231 /* PlayViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		98F970A41BC9FDF40033E231 /* PlayVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F970A31BC9FDF40033E231 /* PlayVideoView.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +47,8 @@
 		98E88B831BBA8F3C00D4D18D /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		98E88B851BBA8F8100D4D18D /* RecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
 		98E88B871BBA8F9400D4D18D /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		98F970A11BC9F8A00033E231 /* PlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayViewController.swift; sourceTree = "<group>"; };
+		98F970A31BC9FDF40033E231 /* PlayVideoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayVideoView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				9838E8DC1BBD2DBB00698408 /* RecordVideoView.swift */,
+				98F970A31BC9FDF40033E231 /* PlayVideoView.swift */,
 				98B23E701BC7D32300D4189F /* VideoCell.swift */,
 			);
 			name = View;
@@ -184,6 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				98E88B831BBA8F3C00D4D18D /* HomeViewController.swift */,
+				98F970A11BC9F8A00033E231 /* PlayViewController.swift */,
 			);
 			name = Home;
 			sourceTree = "<group>";
@@ -279,11 +285,13 @@
 				98E88B7F1BBA8E0A00D4D18D /* MPMainTabBarController.swift in Sources */,
 				9869A72D1BBFCCC5002496A1 /* RecordModel.swift in Sources */,
 				98E88B881BBA8F9400D4D18D /* ProfileViewController.swift in Sources */,
+				98F970A21BC9F8A00033E231 /* PlayViewController.swift in Sources */,
 				98E88B841BBA8F3C00D4D18D /* HomeViewController.swift in Sources */,
 				98E88B861BBA8F8100D4D18D /* RecordViewController.swift in Sources */,
 				9838E8DD1BBD2DBB00698408 /* RecordVideoView.swift in Sources */,
 				98B23E711BC7D32300D4189F /* VideoCell.swift in Sources */,
 				9869A7261BBFC7AC002496A1 /* LoadingBox.m in Sources */,
+				98F970A41BC9FDF40033E231 /* PlayVideoView.swift in Sources */,
 				98B23E6F1BC7B7C000D4189F /* PhotosModel.swift in Sources */,
 				9838E8E31BBD3FFB00698408 /* HWWeakTimer.m in Sources */,
 			);
