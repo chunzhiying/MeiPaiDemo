@@ -8,7 +8,7 @@
         <scene sceneID="5Ha-eK-Leb">
             <objects>
                 <tabBarController id="vGa-fK-nwi" customClass="MPMainTabBarController" customModule="MeiPaiDemo" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBar key="tabBar" opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" barStyle="black" id="HgH-dl-dzp">
+                    <tabBar key="tabBar" opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" barStyle="black" translucent="NO" id="HgH-dl-dzp">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -49,7 +49,7 @@
                         <viewControllerLayoutGuide type="bottom" id="maI-MO-bHR"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="qUS-0c-7hx">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="bOf-BZ-JXa">
@@ -121,7 +121,7 @@
         <!--Play View Controller-->
         <scene sceneID="R5U-dk-ek9">
             <objects>
-                <viewController storyboardIdentifier="PlayViewController" id="tqH-NB-SBY" customClass="PlayViewController" customModule="MeiPaiDemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlayViewController" hidesBottomBarWhenPushed="YES" id="tqH-NB-SBY" customClass="PlayViewController" customModule="MeiPaiDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="MaH-7M-Loe"/>
                         <viewControllerLayoutGuide type="bottom" id="bs9-ZL-8hR"/>
@@ -145,7 +145,7 @@
                         <viewControllerLayoutGuide type="bottom" id="k0r-kV-vbY"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="iSK-1i-crm">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G1g-q8-jxD" userLabel="Record Button">
@@ -181,7 +181,7 @@
                         <viewControllerLayoutGuide type="bottom" id="orN-cw-jWz"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="wV1-ts-TAJ">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" misplaced="YES" image="152" translatesAutoresizingMaskIntoConstraints="NO" id="UfP-JM-elM">

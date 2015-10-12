@@ -12,7 +12,9 @@ import AVFoundation
 class PlayViewController: UIViewController {
     
     var asset: AVAsset!
+    
     private var videoView: PlayVideoView!
+    private let model = PhotosModel.shareInstance
     
     class func toPlayViewControllerWithAsset(asset: AVAsset) -> PlayViewController {
         
@@ -25,8 +27,33 @@ class PlayViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        videoView = PlayVideoView(frame: UIScreen.mainScreen().bounds, asset: asset)
-        view.addSubview(videoView)
+        navigationController?.navigationBarHidden = true
+        initView()
+    }
+    
+    func initView() {
+        
+        func initVideoView() {
+            videoView = PlayVideoView(frame: UIScreen.mainScreen().bounds, asset: asset)
+            videoView.delegate = self
+            videoView.backgroundColor = UIColor.blackColor()
+            view.addSubview(videoView)
+        }
+     
+        initVideoView()
+
+    }
+    
+}
+
+extension PlayViewController: PlayVideoGestureDelegate {
+    
+    func onVideoToPause() {
+        navigationController?.navigationBarHidden = false
+    }
+    
+    func onVideoToPlay() {
+        navigationController?.navigationBarHidden = true
     }
     
 }

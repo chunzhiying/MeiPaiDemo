@@ -76,12 +76,12 @@ class RecordModel {
             exporter?.exportAsynchronouslyWithCompletionHandler() {
                 dispatch_async(dispatch_get_main_queue()) {
                     self.outputFilePathAry += [self.outputFilePath]
-                    mergeVideoWithUrlAry()
+                    mergeVideo()
                 }
             }
         }
         
-        func mergeVideoWithUrlAry() {
+        func mergeVideo() {
             
             let assertAry = outputFileUrlAry.map({ return AVAsset(URL: $0) })
             let endAsset = AVAsset(URL: outputFileUrlAry.last!)
@@ -264,18 +264,22 @@ class RecordModel {
         composition.animationTool = AVVideoCompositionCoreAnimationTool(postProcessingAsVideoLayer: videoLayer, inLayer: parentLayer)
         
         let contentImage = CIImage(CGImage: (UIImage(named: "Baby-Lufy")?.CGImage)!)
+        maskLayer.contents = contentImage
+        
+        // filter
         let context = CIContext(options: nil)
         let filter = CIFilter(name: "CIGaussianBlur")
         filter?.setValue(contentImage, forKey: kCIInputImageKey)
         filter?.setValue(2, forKey: "inputRadius")
         
         guard let filterCIImage = filter?.outputImage else { return }
-        
         let filterImage = context.createCGImage(filterCIImage, fromRect: filterCIImage.extent)
         
+        // animation
         let transition = CATransition()
         transition.type = kCATransitionFade
         transition.duration = 1
+        
         maskLayer.addAnimation(transition, forKey: nil)
         maskLayer.contents = filterImage
         

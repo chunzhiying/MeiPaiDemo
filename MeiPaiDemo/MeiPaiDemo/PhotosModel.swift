@@ -24,6 +24,7 @@ class PhotosModel: NSObject {
     private var avAssetAry = [AVAsset]()
     private var targetSize: CGSize!
     
+    // MARK: - Life Cycle
     private override init() {
         super.init()
         PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
@@ -33,6 +34,7 @@ class PhotosModel: NSObject {
         PHPhotoLibrary.sharedPhotoLibrary().unregisterChangeObserver(self)
     }
     
+    // 请求相册视频
     func getVideoAssetFromPhotoAppWithTargetSize(targetSize: CGSize) {
         self.targetSize = targetSize
         assetAry.removeAll()
@@ -47,6 +49,7 @@ class PhotosModel: NSObject {
         
     }
     
+    // 预览图
     func getVideoImageByAsset(asset: PHAsset, complete: (UIImage) -> Void) {
         
         // 当targetSize = PHImageManagerMaximumSize，info中有视频的url，但是image为nil，targetSize为具体size时，有image，但是info中没有url
@@ -57,6 +60,7 @@ class PhotosModel: NSObject {
         }
     }
     
+    // 视频asset
     func getVideoAssetByAsset(asset: PHAsset, complete: (AVAsset) -> Void) {
         
         PHImageManager.defaultManager().requestAVAssetForVideo(asset, options: nil) { avAssetOpt, avAudioMixOpt, infoOpt in
@@ -67,6 +71,24 @@ class PhotosModel: NSObject {
 
     }
     
+    // 没有权限
+//    func removeVideo(asset: AVAsset) {
+//        
+//        guard asset.isKindOfClass(AVURLAsset.self) else { return }
+//        let urlAsset = asset as! AVURLAsset
+//         print("\(urlAsset.URL)")
+//        
+//        let fileManager = NSFileManager.defaultManager()
+//        
+//        do {
+//            try fileManager.removeItemAtURL(urlAsset.URL)
+//        } catch {
+//            print("remove video fail!")
+//        }
+//        
+//    }
+    
+    // MARK: - Notification
     func postNotification() {
         NSNotificationCenter.defaultCenter().postNotificationName(PhotosModelNotification.photoUpdated, object: nil)
     }
