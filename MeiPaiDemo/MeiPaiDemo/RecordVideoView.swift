@@ -20,12 +20,18 @@ class RecordVideoView: UIView {
     weak var delegate: MPCaptureFileOutputRecordingDelegate?
     
     private var captureSession: AVCaptureSession?
+    private var videoCaptureInput: AVCaptureDeviceInput?
+    private var audioCaptureInput: AVCaptureDeviceInput?
     private var captureOutput: AVCaptureMovieFileOutput!
     private var previewLayer: AVCaptureVideoPreviewLayer?
     
     private var tipsView: UILabel!
     private var progress: UISlider!
     private var timer: NSTimer?
+    
+    private var toolView: UIView!
+    private var cameraChange: UIButton!
+    private var torchSwitch: UISwitch!
     
     private let maxVideoLength: Float = 10
     private var timerCount: Float  = 0 {
@@ -61,22 +67,20 @@ class RecordVideoView: UIView {
             let audioDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeAudio)
             
             // input
-            let videoDeviceInput: AVCaptureDeviceInput?
             do {
-                videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice) // video
+                videoCaptureInput = try AVCaptureDeviceInput(device: videoDevice) // video
             } catch _ {
-                videoDeviceInput = nil
+                videoCaptureInput = nil
             }
             
-            let audioDeviceInput: AVCaptureDeviceInput?
             do {
-                audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice) // audio
+                audioCaptureInput = try AVCaptureDeviceInput(device: audioDevice) // audio
             } catch _ {
-                audioDeviceInput = nil
+                audioCaptureInput = nil
             }
             
             // add input
-            guard let videoInput = videoDeviceInput, let audioInput = audioDeviceInput else {
+            guard let videoInput = videoCaptureInput, let audioInput = audioCaptureInput else {
                 previewLayer = nil
                 captureSession = nil
                 return
@@ -124,10 +128,87 @@ class RecordVideoView: UIView {
             addSubview(progress)
         }
         
+        func setToolView() {
+            toolView = UIView(frame: CGRectMake(0, 0, self.bounds.width, 44 + 20))
+            toolView.backgroundColor = UIColor.blackColor()
+            toolView.alpha = 0.8
+            
+            cameraChange = UIButton(frame: CGRectMake(self.bounds.width - 20 - 30, 6 + 20, 30, 30))
+            cameraChange.setImage(UIImage(named: "changeCamera"), forState: .Normal)
+            cameraChange.addTarget(self, action: "changeCamera", forControlEvents: .TouchDown)
+            
+            torchSwitch = UISwitch(frame: CGRectMake(cameraChange.frame.origin.x - 20 - 50, 6 + 20, 50, 30))
+            torchSwitch.onTintColor = UIColor(red: 255/255, green: 102/255, blue: 102/255, alpha: 1)
+            torchSwitch.addTarget(self, action: "changeTorchMode:", forControlEvents: .ValueChanged)
+            
+            toolView.addSubview(cameraChange)
+            toolView.addSubview(torchSwitch)
+            self.addSubview(toolView)
+        }
         
         setAVFoundation()
         setTipsView()
         setProgress()
+        setToolView()
+        
+    }
+    
+    func changeCamera() {
+        
+        func getCameraDeviceByPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice? {
+            let cameras = AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo) as! [AVCaptureDevice]
+            for camera in cameras {
+                if camera.position == position {
+                    return camera
+                }
+            }
+            return nil
+        }
+        
+        guard let currentVideoDevice = videoCaptureInput?.device else { return }
+        
+        let currentDevicePosition: AVCaptureDevicePosition = currentVideoDevice.position
+        let changeToPosition: AVCaptureDevicePosition = currentDevicePosition == .Front ? .Back : .Front
+        guard let changeToDevice = getCameraDeviceByPosition(changeToPosition) else { return }
+        
+        let changeToDeviceInput: AVCaptureDeviceInput
+        do {
+            changeToDeviceInput = try AVCaptureDeviceInput(device: changeToDevice) // video
+        } catch _ {
+           return
+        }
+        
+        captureSession?.beginConfiguration()
+        captureSession?.removeInput(videoCaptureInput)
+        captureSession?.addInput(changeToDeviceInput)
+        captureSession?.commitConfiguration()
+        
+        videoCaptureInput = changeToDeviceInput
+        
+    }
+    
+    func changeTorchMode(sender: UISwitch) {
+        let open = sender.on
+        
+        lockVideoDeviceToChangeProperty { device in
+            guard device.hasTorch && device.torchAvailable else { return }
+            let torchMode: AVCaptureTorchMode = open ? .On : .Off
+            device.torchMode = torchMode
+        }
+        
+    }
+    
+    func lockVideoDeviceToChangeProperty(locked: (AVCaptureDevice) -> Void) {
+        
+        guard let videoDevice = videoCaptureInput?.device else { return }
+        do {
+            try videoDevice.lockForConfiguration()
+            locked(videoDevice)
+            videoDevice.unlockForConfiguration()
+            
+        } catch {
+            return
+        }
         
     }
     
@@ -154,6 +235,7 @@ class RecordVideoView: UIView {
         }
     }
     
+    // MARK: - Loading Method
     func showTipsView() {
         
         tipsView.text = "正在录制.."
@@ -184,6 +266,7 @@ class RecordVideoView: UIView {
     
     func stopRunning() {
         captureSession?.stopRunning()
+        torchSwitch.setOn(false, animated: false)
     }
     
     func startRecordingWithUrl(outputFileUrl: NSURL) {

@@ -46,6 +46,9 @@ class RecordViewController: UIViewController {
         recordVideoView = RecordVideoView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height * 3 / 4))
         recordVideoView.delegate = self
         view.addSubview(recordVideoView)
+        
+        navigationController?.navigationBar.hidden = true
+        
     }
 
     override func didReceiveMemoryWarning() {

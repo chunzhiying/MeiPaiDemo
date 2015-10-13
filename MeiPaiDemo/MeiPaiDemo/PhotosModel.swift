@@ -40,6 +40,7 @@ class PhotosModel: NSObject {
         assetAry.removeAll()
         
         let smartAlbum = PHAssetCollection.fetchAssetCollectionsWithType(.SmartAlbum, subtype: .SmartAlbumVideos, options: nil)
+        guard smartAlbum.count > 0 else { return }
         let assetsFetchResult = PHAsset.fetchAssetsInAssetCollection(smartAlbum.firstObject as! PHAssetCollection , options: nil)
         
         for var i = 0; i < assetsFetchResult.count; i++ {
@@ -70,23 +71,6 @@ class PhotosModel: NSObject {
         }
 
     }
-    
-    // 没有权限
-//    func removeVideo(asset: AVAsset) {
-//        
-//        guard asset.isKindOfClass(AVURLAsset.self) else { return }
-//        let urlAsset = asset as! AVURLAsset
-//         print("\(urlAsset.URL)")
-//        
-//        let fileManager = NSFileManager.defaultManager()
-//        
-//        do {
-//            try fileManager.removeItemAtURL(urlAsset.URL)
-//        } catch {
-//            print("remove video fail!")
-//        }
-//        
-//    }
     
     // MARK: - Notification
     func postNotification() {
