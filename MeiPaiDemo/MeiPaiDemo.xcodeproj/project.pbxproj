@@ -12,6 +12,7 @@
 		9869A7261BBFC7AC002496A1 /* LoadingBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 9869A7241BBFC7AC002496A1 /* LoadingBox.m */; settings = {ASSET_TAGS = (); }; };
 		9869A7271BBFC7AC002496A1 /* LoadingBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9869A7251BBFC7AC002496A1 /* LoadingBox.xib */; settings = {ASSET_TAGS = (); }; };
 		9869A72D1BBFCCC5002496A1 /* RecordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9869A72C1BBFCCC5002496A1 /* RecordModel.swift */; settings = {ASSET_TAGS = (); }; };
+		98A465591BCE0693005244C5 /* RealTimeFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A465581BCE0693005244C5 /* RealTimeFilterView.swift */; settings = {ASSET_TAGS = (); }; };
 		98B23E6F1BC7B7C000D4189F /* PhotosModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B23E6E1BC7B7C000D4189F /* PhotosModel.swift */; settings = {ASSET_TAGS = (); }; };
 		98B23E711BC7D32300D4189F /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B23E701BC7D32300D4189F /* VideoCell.swift */; settings = {ASSET_TAGS = (); }; };
 		98E88B671BBA878D00D4D18D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E88B661BBA878D00D4D18D /* AppDelegate.swift */; };
@@ -35,6 +36,7 @@
 		9869A7241BBFC7AC002496A1 /* LoadingBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingBox.m; sourceTree = "<group>"; };
 		9869A7251BBFC7AC002496A1 /* LoadingBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoadingBox.xib; sourceTree = "<group>"; };
 		9869A72C1BBFCCC5002496A1 /* RecordModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordModel.swift; sourceTree = "<group>"; };
+		98A465581BCE0693005244C5 /* RealTimeFilterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealTimeFilterView.swift; sourceTree = "<group>"; };
 		98B23E6E1BC7B7C000D4189F /* PhotosModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosModel.swift; sourceTree = "<group>"; };
 		98B23E701BC7D32300D4189F /* VideoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
 		98E88B631BBA878D00D4D18D /* MeiPaiDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeiPaiDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,6 +67,7 @@
 		9838E8DE1BBD34B900698408 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				98A465581BCE0693005244C5 /* RealTimeFilterView.swift */,
 				9869A7221BBFC7AC002496A1 /* LoadingBox */,
 				9838E8E01BBD3FFB00698408 /* HWWeakTimer */,
 			);
@@ -286,6 +289,7 @@
 				9869A72D1BBFCCC5002496A1 /* RecordModel.swift in Sources */,
 				98E88B881BBA8F9400D4D18D /* ProfileViewController.swift in Sources */,
 				98F970A21BC9F8A00033E231 /* PlayViewController.swift in Sources */,
+				98A465591BCE0693005244C5 /* RealTimeFilterView.swift in Sources */,
 				98E88B841BBA8F3C00D4D18D /* HomeViewController.swift in Sources */,
 				98E88B861BBA8F8100D4D18D /* RecordViewController.swift in Sources */,
 				9838E8DD1BBD2DBB00698408 /* RecordVideoView.swift in Sources */,

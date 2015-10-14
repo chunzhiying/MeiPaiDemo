@@ -72,6 +72,12 @@ class RecordViewController: UIViewController {
         
     }
     
+    @IBAction func changeCameraMode(sender: AnyObject) {
+        
+        let filter = CIFilter(name: "CIGaussianBlu")
+        recordVideoView.changeRecordMode(.RealTimeFilter, filter: filter)
+    }
+    
     // MARK: - Alert Handle
     func handleAlertController() {
         canRecord = false

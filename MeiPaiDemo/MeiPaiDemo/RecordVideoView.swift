@@ -9,6 +9,11 @@
 import UIKit
 import AVFoundation
 
+enum RecordMode: Int {
+    case Normal
+    case RealTimeFilter
+}
+
 protocol MPCaptureFileOutputRecordingDelegate: NSObjectProtocol {
     func mpCaptureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!)
     
@@ -19,11 +24,18 @@ class RecordVideoView: UIView {
     
     weak var delegate: MPCaptureFileOutputRecordingDelegate?
     
+    var recordMode: RecordMode = .Normal
+    
     private var captureSession: AVCaptureSession?
     private var videoCaptureInput: AVCaptureDeviceInput?
     private var audioCaptureInput: AVCaptureDeviceInput?
-    private var captureOutput: AVCaptureMovieFileOutput!
+    
+    private var captureMovieFileOutput: AVCaptureMovieFileOutput?
+    private var captureVideoDataOutput: AVCaptureVideoDataOutput?
+    
     private var previewLayer: AVCaptureVideoPreviewLayer?
+    private var filterPreviewView: RealTimeFilterView?
+    private var filter: CIFilter?
     
     private var tipsView: UILabel!
     private var progress: UISlider!
@@ -58,50 +70,6 @@ class RecordVideoView: UIView {
     
     // MARK: -  Custom Method
     func initView() {
-        
-        func setAVFoundation() {
-            captureSession = AVCaptureSession()
-            captureSession?.beginConfiguration()
-            
-            let videoDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
-            let audioDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeAudio)
-            
-            // input
-            do {
-                videoCaptureInput = try AVCaptureDeviceInput(device: videoDevice) // video
-            } catch _ {
-                videoCaptureInput = nil
-            }
-            
-            do {
-                audioCaptureInput = try AVCaptureDeviceInput(device: audioDevice) // audio
-            } catch _ {
-                audioCaptureInput = nil
-            }
-            
-            // add input
-            guard let videoInput = videoCaptureInput, let audioInput = audioCaptureInput else {
-                previewLayer = nil
-                captureSession = nil
-                return
-            }
-            captureSession!.addInput(videoInput)
-            captureSession!.addInput(audioInput)
-            
-            // output
-            captureOutput = AVCaptureMovieFileOutput()
-            
-            // add output
-            captureSession!.addOutput(captureOutput)
-            
-            previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-            previewLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-            previewLayer!.bounds = bounds
-            previewLayer!.position = CGPointMake(bounds.size.width / 2, bounds.size.height / 2)
-            
-            layer.addSublayer(previewLayer!)
-            captureSession?.commitConfiguration()
-        }
         
         func setTipsView() {
             tipsView = UILabel(frame: CGRectMake((bounds.width - 100) / 2, bounds.height - 45, 100, 30))
@@ -152,6 +120,64 @@ class RecordVideoView: UIView {
         setToolView()
         
     }
+    
+    func setAVFoundation() {
+        captureSession = AVCaptureSession()
+        captureSession?.beginConfiguration()
+        
+        let videoDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
+        let audioDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeAudio)
+        
+        // input
+        do {
+            videoCaptureInput = try AVCaptureDeviceInput(device: videoDevice) // video
+        } catch _ {
+            videoCaptureInput = nil
+        }
+        
+        do {
+            audioCaptureInput = try AVCaptureDeviceInput(device: audioDevice) // audio
+        } catch _ {
+            audioCaptureInput = nil
+        }
+        
+        // add input
+        guard let videoInput = videoCaptureInput, let audioInput = audioCaptureInput else {
+            previewLayer = nil
+            captureSession = nil
+            return
+        }
+        captureSession!.addInput(videoInput)
+        captureSession!.addInput(audioInput)
+        
+        if recordMode == .Normal {
+        
+            captureMovieFileOutput = AVCaptureMovieFileOutput()
+            captureSession!.addOutput(captureMovieFileOutput)
+            
+            previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+            previewLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+            previewLayer!.bounds = bounds
+            previewLayer!.position = CGPointMake(bounds.size.width / 2, bounds.size.height / 2)
+            
+            layer.insertSublayer(previewLayer!, atIndex: 0)
+            
+        } else if recordMode == .RealTimeFilter {
+            
+            captureVideoDataOutput = AVCaptureVideoDataOutput()
+            captureVideoDataOutput?.videoSettings = [kCVPixelBufferPixelFormatTypeKey : Int(kCVPixelFormatType_32BGRA)]
+            captureVideoDataOutput?.alwaysDiscardsLateVideoFrames = true
+            captureVideoDataOutput?.setSampleBufferDelegate(self, queue: dispatch_queue_create("VideoQueue", DISPATCH_QUEUE_SERIAL))
+            captureSession!.addOutput(captureVideoDataOutput)
+            
+            filterPreviewView = RealTimeFilterView(frame: bounds)
+            insertSubview(filterPreviewView!, atIndex: 0)
+            
+        }
+        
+        captureSession?.commitConfiguration()
+    }
+
     
     func changeCamera() {
         
@@ -212,7 +238,6 @@ class RecordVideoView: UIView {
         
     }
     
-    
     // MARK: - Timer
     func setTimer() {
         timer = HWWeakTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "timeOut", userInfo: nil, repeats: true)
@@ -270,19 +295,32 @@ class RecordVideoView: UIView {
     }
     
     func startRecordingWithUrl(outputFileUrl: NSURL) {
-        captureOutput.startRecordingToOutputFileURL(outputFileUrl, recordingDelegate: self)
+        captureMovieFileOutput?.startRecordingToOutputFileURL(outputFileUrl, recordingDelegate: self)
         showTipsView()
         setTimer()
     }
     
     func stopRecording() {
-        captureOutput.stopRecording()
+        captureMovieFileOutput?.stopRecording()
         hideTipsView()
         deinitTimer()
     }
     
     func resetRecordVideoUI() {
         timerCount = 0
+    }
+    
+    func changeRecordMode(mode: RecordMode, filter: CIFilter?) {
+        
+        self.filter = filter
+        self.recordMode = mode
+        
+        stopRunning()
+        previewLayer?.removeFromSuperlayer()
+        filterPreviewView?.removeFromSuperview()
+        setAVFoundation()
+        startRunning()
+        
     }
 }
 
@@ -297,5 +335,26 @@ extension RecordVideoView: AVCaptureFileOutputRecordingDelegate {
         delegate?.mpCaptureOutput(captureOutput, didFinishRecordingToOutputFileAtURL: outputFileURL, fromConnections: connections, error: error, canContinueRecord: timerCount < maxVideoLength && timerCount > 0)
     }
 
+}
+
+extension RecordVideoView: AVCaptureVideoDataOutputSampleBufferDelegate {
+    
+    func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!) {
+        
+        let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+        var image = CIImage(CVPixelBuffer: imageBuffer)
+        
+        let transfrom = CGAffineTransformMakeRotation(CGFloat(M_PI_2))
+        image.imageByApplyingTransform(transfrom)
+        
+        filterPreviewView?.bindDrawable()
+        if let filter = self.filter {
+            filter.setValue(image, forKey: kCIInputImageKey)
+            guard let ouputImage = filter.outputImage else { return }
+            image = ouputImage
+        }
+        
+        filterPreviewView?.image = image
+    }
     
 }

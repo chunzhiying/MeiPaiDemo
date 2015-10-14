@@ -10,4 +10,21 @@ import UIKit
 
 class MPMainTabBarController: UITabBarController {
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.delegate = self
+    }
+    
+}
+
+extension MPMainTabBarController: UITabBarControllerDelegate {
+    
+    func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
+        let animation = CATransition()
+        animation.duration = 0.3
+        animation.type = kCATransitionFade
+        self.view.layer.addAnimation(animation, forKey: nil)
+    }
+    
 }
