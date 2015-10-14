@@ -20,7 +20,20 @@ class MPMainTabBarController: UITabBarController {
 
 extension MPMainTabBarController: UITabBarControllerDelegate {
     
+    func tabBarController(tabBarController: UITabBarController, shouldSelectViewController viewController: UIViewController) -> Bool {
+        
+        if viewController.title == "MeiPai" {
+            self.selectedViewController!.presentViewController((storyboard?.instantiateViewControllerWithIdentifier("RecordViewController"))!, animated: true, completion: nil)
+            
+            return false
+        }
+        
+        return true
+
+    }
+    
     func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
+            
         let animation = CATransition()
         animation.duration = 0.3
         animation.type = kCATransitionFade

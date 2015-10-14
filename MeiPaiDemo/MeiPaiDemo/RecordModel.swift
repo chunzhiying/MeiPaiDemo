@@ -35,6 +35,7 @@ class RecordModel {
     func saveToCameraRoll(completion: () -> Void) {
         
         func createEndingVideo() {
+            guard outputFileUrlAry.count > 0 else { return }
             
             let endAsset = AVAsset(URL: outputFileUrlAry.last!)
             

@@ -139,17 +139,17 @@
         <!--MeiPai-->
         <scene sceneID="hBk-6e-xb9">
             <objects>
-                <viewController id="lGr-AR-c4X" customClass="RecordViewController" customModule="MeiPaiDemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RecordViewController" id="lGr-AR-c4X" customClass="RecordViewController" customModule="MeiPaiDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="EsD-KG-Z7h"/>
                         <viewControllerLayoutGuide type="bottom" id="k0r-kV-vbY"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="iSK-1i-crm">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G1g-q8-jxD" userLabel="Record Button">
-                                <rect key="frame" x="260" y="456" width="80" height="80"/>
+                                <rect key="frame" x="260" y="505" width="80" height="80"/>
                                 <color key="backgroundColor" red="1" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="q7X-NG-Beh"/>
@@ -239,15 +239,12 @@
         <!--MeiPai-->
         <scene sceneID="Vfi-gP-lOz">
             <objects>
-                <navigationController id="H6N-6T-LsP" sceneMemberID="viewController">
+                <navigationController title="MeiPai" id="H6N-6T-LsP" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="MeiPai" id="FVY-D1-7Hr"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="blackTranslucent" id="UgD-YC-xXn">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
-                    <connections>
-                        <segue destination="lGr-AR-c4X" kind="relationship" relationship="rootViewController" id="chF-gr-sGZ"/>
-                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PLh-p4-fH7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

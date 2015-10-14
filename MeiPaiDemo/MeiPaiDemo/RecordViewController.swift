@@ -17,6 +17,11 @@ class RecordViewController: UIViewController {
     private var loadingBox: LoadingBox? = LoadingBox()
     
     private var model = RecordModel()
+    private var filterIndex = 0
+    private var filters = [ CIFilter(name: "CIPhotoEffectInstant"),
+                            CIFilter(name: "CIPhotoEffectTransfer"),
+                            CIFilter(name: "CIPhotoEffectProcess"),
+                            CIFilter(name: "CIColorInvert ")]
     
     private var canRecord: Bool = true
     
@@ -44,7 +49,8 @@ class RecordViewController: UIViewController {
         recordButton.addGestureRecognizer(longTap)
         
         recordVideoView = RecordVideoView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height * 3 / 4))
-        recordVideoView.delegate = self
+        recordVideoView.fileOutputRecordingdDelegate = self
+        recordVideoView.recordVideoDelegate = self
         view.addSubview(recordVideoView)
         
         navigationController?.navigationBar.hidden = true
@@ -74,7 +80,7 @@ class RecordViewController: UIViewController {
     
     @IBAction func changeCameraMode(sender: AnyObject) {
         
-        let filter = CIFilter(name: "CIGaussianBlu")
+        let filter = filters[ (filterIndex++) % filters.count]
         recordVideoView.changeRecordMode(.RealTimeFilter, filter: filter)
     }
     
@@ -94,6 +100,13 @@ class RecordViewController: UIViewController {
 
     }
     
+}
+
+extension RecordViewController: RecordVideoUIDelegate {
+    
+    func dismissViewController() {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
 }
 
 extension RecordViewController: MPCaptureFileOutputRecordingDelegate {

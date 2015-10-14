@@ -67,7 +67,6 @@
 		9838E8DE1BBD34B900698408 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				98A465581BCE0693005244C5 /* RealTimeFilterView.swift */,
 				9869A7221BBFC7AC002496A1 /* LoadingBox */,
 				9838E8E01BBD3FFB00698408 /* HWWeakTimer */,
 			);
@@ -97,6 +96,24 @@
 			isa = PBXGroup;
 			children = (
 				9869A72C1BBFCCC5002496A1 /* RecordModel.swift */,
+			);
+			name = MeiPai;
+			sourceTree = "<group>";
+		};
+		98A4655A1BCE4155005244C5 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				98F970A31BC9FDF40033E231 /* PlayVideoView.swift */,
+				98B23E701BC7D32300D4189F /* VideoCell.swift */,
+			);
+			name = Home;
+			sourceTree = "<group>";
+		};
+		98A4655B1BCE415D005244C5 /* MeiPai */ = {
+			isa = PBXGroup;
+			children = (
+				9838E8DC1BBD2DBB00698408 /* RecordVideoView.swift */,
+				98A465581BCE0693005244C5 /* RealTimeFilterView.swift */,
 			);
 			name = MeiPai;
 			sourceTree = "<group>";
@@ -170,9 +187,8 @@
 		98E88B7C1BBA8CB900D4D18D /* View */ = {
 			isa = PBXGroup;
 			children = (
-				9838E8DC1BBD2DBB00698408 /* RecordVideoView.swift */,
-				98F970A31BC9FDF40033E231 /* PlayVideoView.swift */,
-				98B23E701BC7D32300D4189F /* VideoCell.swift */,
+				98A4655B1BCE415D005244C5 /* MeiPai */,
+				98A4655A1BCE4155005244C5 /* Home */,
 			);
 			name = View;
 			sourceTree = "<group>";

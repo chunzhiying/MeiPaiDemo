@@ -20,9 +20,14 @@ protocol MPCaptureFileOutputRecordingDelegate: NSObjectProtocol {
     func mpCaptureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!, canContinueRecord: Bool)
 }
 
+protocol RecordVideoUIDelegate: NSObjectProtocol {
+    func dismissViewController()
+}
+
 class RecordVideoView: UIView {
     
-    weak var delegate: MPCaptureFileOutputRecordingDelegate?
+    weak var fileOutputRecordingdDelegate: MPCaptureFileOutputRecordingDelegate?
+    weak var recordVideoDelegate: RecordVideoUIDelegate?
     
     var recordMode: RecordMode = .Normal
     
@@ -109,8 +114,13 @@ class RecordVideoView: UIView {
             torchSwitch.onTintColor = UIColor(red: 255/255, green: 102/255, blue: 102/255, alpha: 1)
             torchSwitch.addTarget(self, action: "changeTorchMode:", forControlEvents: .ValueChanged)
             
+            let backButton = UIButton(frame: CGRectMake(10, 6 + 10, 51, 51))
+            backButton.setImage(UIImage(named: "back"), forState: .Normal)
+            backButton.addTarget(self, action: "clickBack", forControlEvents: .TouchDown)
+            
             toolView.addSubview(cameraChange)
             toolView.addSubview(torchSwitch)
+            toolView.addSubview(backButton)
             self.addSubview(toolView)
         }
         
@@ -178,6 +188,10 @@ class RecordVideoView: UIView {
         captureSession?.commitConfiguration()
     }
 
+    // MARK: - IBAction
+    func clickBack() {
+        recordVideoDelegate?.dismissViewController()
+    }
     
     func changeCamera() {
         
@@ -328,11 +342,11 @@ class RecordVideoView: UIView {
 extension RecordVideoView: AVCaptureFileOutputRecordingDelegate {
     
     func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
-        delegate?.mpCaptureOutput(captureOutput, didStartRecordingToOutputFileAtURL: fileURL, fromConnections: connections)
+        fileOutputRecordingdDelegate?.mpCaptureOutput(captureOutput, didStartRecordingToOutputFileAtURL: fileURL, fromConnections: connections)
     }
     
     func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
-        delegate?.mpCaptureOutput(captureOutput, didFinishRecordingToOutputFileAtURL: outputFileURL, fromConnections: connections, error: error, canContinueRecord: timerCount < maxVideoLength && timerCount > 0)
+        fileOutputRecordingdDelegate?.mpCaptureOutput(captureOutput, didFinishRecordingToOutputFileAtURL: outputFileURL, fromConnections: connections, error: error, canContinueRecord: timerCount < maxVideoLength && timerCount > 0)
     }
 
 }
@@ -344,8 +358,8 @@ extension RecordVideoView: AVCaptureVideoDataOutputSampleBufferDelegate {
         let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
         var image = CIImage(CVPixelBuffer: imageBuffer)
         
-        let transfrom = CGAffineTransformMakeRotation(CGFloat(M_PI_2))
-        image.imageByApplyingTransform(transfrom)
+        let transfrom = CGAffineTransformMakeRotation(CGFloat(-M_PI_2))
+        image = image.imageByApplyingTransform(transfrom)
         
         filterPreviewView?.bindDrawable()
         if let filter = self.filter {
