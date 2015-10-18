@@ -14,14 +14,15 @@ class RecordViewController: UIViewController {
 
     @IBOutlet weak var recordButton: UIView!
     private var recordVideoView: RecordVideoView!
+    private var filterScrollView: FilterScrollView!
     private var loadingBox: LoadingBox? = LoadingBox()
     
     private var model = RecordModel()
     private var filterIndex = 0
-    private var filters = [ CIFilter(name: "CIPhotoEffectInstant"),
+    private var filters = [ CIFilter(name: "Normal"),
+                            CIFilter(name: "CIPhotoEffectInstant"),
                             CIFilter(name: "CIPhotoEffectTransfer"),
-                            CIFilter(name: "CIPhotoEffectProcess"),
-                            CIFilter(name: "CIColorInvert ")]
+                            CIFilter(name: "CIPhotoEffectProcess")]
     
     private var canRecord: Bool = true
     
@@ -41,26 +42,63 @@ class RecordViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        recordButton.layer.cornerRadius = recordButton.bounds.size.width / 2
-        recordButton.layer.masksToBounds = true
-        
-        let longTap = UILongPressGestureRecognizer(target: self, action: "handleLongGesture:")
-        recordButton.addGestureRecognizer(longTap)
-        
-        recordVideoView = RecordVideoView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height * 3 / 4))
-        recordVideoView.fileOutputRecordingdDelegate = self
-        recordVideoView.recordVideoDelegate = self
-        view.addSubview(recordVideoView)
-        
+    
+        initView()
         navigationController?.navigationBar.hidden = true
+    }
+    
+    func initView() {
+        
+        func initRecordButton() {
+            
+            recordButton.layer.cornerRadius = recordButton.bounds.size.width / 2
+            recordButton.layer.masksToBounds = true
+            
+            let centerLayer = CALayer()
+            centerLayer.frame = CGRectMake(5, 5, recordButton.frame.size.width - 10, recordButton.frame.size.height - 10)
+            centerLayer.backgroundColor = CommonColor.mainColor.CGColor
+            centerLayer.cornerRadius = centerLayer.frame.size.width / 2
+            centerLayer.masksToBounds = true
+            recordButton.layer.addSublayer(centerLayer)
+            
+            let longTap = UILongPressGestureRecognizer(target: self, action: "handleLongGesture:")
+            recordButton.addGestureRecognizer(longTap)
+
+        }
+        
+        func initRecordVideoView() {
+            recordVideoView = RecordVideoView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height * 3 / 4))
+            recordVideoView.fileOutputRecordingdDelegate = self
+            recordVideoView.recordVideoDelegate = self
+            view.addSubview(recordVideoView)
+
+        }
+        
+        func initFilterScrollView() {
+            
+            filterScrollView = FilterScrollView(frame: CGRectMake(0, recordVideoView.frame.origin.y + recordVideoView.frame.size.height + 10 , view.frame.width, 30), filters: filters)
+            view.addSubview(filterScrollView)
+            
+            let leftSwipe = UISwipeGestureRecognizer(target: self, action: "handleSwipe:")
+            leftSwipe.direction = .Left
+            
+            let rightSwipe = UISwipeGestureRecognizer(target: self, action: "handleSwipe:")
+            rightSwipe.direction = .Right
+        
+            recordVideoView.addGestureRecognizer(leftSwipe)
+            recordVideoView.addGestureRecognizer(rightSwipe)
+        }
+        
+        initRecordButton()
+        initRecordVideoView()
+        initFilterScrollView()
         
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-
     }
+    
     
     // MARK: - Gesture
     func handleLongGesture(sender: UILongPressGestureRecognizer) {
@@ -69,7 +107,8 @@ class RecordViewController: UIViewController {
         
         switch sender.state {
         case .Began:
-            recordVideoView.startRecordingWithUrl(model.outputFileUrl)
+            recordVideoView.startRecordingOnUrl(model.outputFileUrl)
+            model.addNewVideoFilePath()
         case .Ended:
             recordVideoView.stopRecording()
         default:
@@ -78,10 +117,26 @@ class RecordViewController: UIViewController {
         
     }
     
-    @IBAction func changeCameraMode(sender: AnyObject) {
+    func handleSwipe(sender: UISwipeGestureRecognizer) {
         
-        let filter = filters[ (filterIndex++) % filters.count]
+        guard (sender.direction == UISwipeGestureRecognizerDirection.Left) || (sender.direction == UISwipeGestureRecognizerDirection.Right) else { return }
+        
+        if sender.direction == .Left {
+            filterIndex++
+        } else if sender.direction == .Right {
+            filterIndex--
+        }
+        
+        if filterIndex == filters.count {
+            filterIndex = filters.count - 1
+        } else if filterIndex == -1 {
+            filterIndex = 0
+        }
+        
+        let filter = filters[ filterIndex % filters.count]
         recordVideoView.changeRecordMode(.RealTimeFilter, filter: filter)
+        filterScrollView.changeFIlterByPlus(sender.direction == .Left)
+        
     }
     
     // MARK: - Alert Handle
@@ -110,11 +165,6 @@ extension RecordViewController: RecordVideoUIDelegate {
 }
 
 extension RecordViewController: MPCaptureFileOutputRecordingDelegate {
-    
-    func mpCaptureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
-        
-        model.addNewVideoFilePath()
-    }
     
     func mpCaptureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!, canContinueRecord: Bool) {
         

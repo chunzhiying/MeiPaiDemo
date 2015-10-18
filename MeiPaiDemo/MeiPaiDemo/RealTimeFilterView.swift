@@ -40,7 +40,7 @@ class RealTimeFilterView: GLKView {
         guard let image = self.image else { return }
                 
         let scale = self.window?.screen.scale ?? 1.0
-        let destRect = CGRectApplyAffineTransform(bounds, CGAffineTransformMakeScale(scale, scale))
+        let destRect = CGRectApplyAffineTransform(UIScreen.mainScreen().bounds, CGAffineTransformMakeScale(scale, scale))
         ciContext.drawImage(image, inRect: destRect, fromRect: image.extent)
     }
     

@@ -149,20 +149,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G1g-q8-jxD" userLabel="Record Button">
-                                <rect key="frame" x="260" y="505" width="80" height="80"/>
-                                <color key="backgroundColor" red="1" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <rect key="frame" x="265" y="515" width="70" height="70"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="q7X-NG-Beh"/>
-                                    <constraint firstAttribute="width" constant="80" id="yJx-ZQ-myg"/>
+                                    <constraint firstAttribute="height" constant="70" id="q7X-NG-Beh"/>
+                                    <constraint firstAttribute="width" constant="70" id="yJx-ZQ-myg"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tCK-Np-p0T">
-                                <rect key="frame" x="57" y="521" width="46" height="30"/>
-                                <state key="normal" title="Button"/>
-                                <connections>
-                                    <action selector="changeCameraMode:" destination="lGr-AR-c4X" eventType="touchUpInside" id="QHD-5f-fTb"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
