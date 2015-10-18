@@ -14,7 +14,6 @@ class FilterScrollView: UIView {
     private var filterLabels = [UILabel]()
     
     private var filters = [CIFilter?]()
-    private var currentFilterIndex = 0
     private let maxCountInScreen = 3
     
     // MARK: - Life Cycle
@@ -54,8 +53,8 @@ class FilterScrollView: UIView {
                 return label
             }
             
-            filterLabels[currentFilterIndex].textColor = CommonColor.mainColor
-            filterLabels[currentFilterIndex].font = UIFont.systemFontOfSize(15)
+            filterLabels[0].textColor = CommonColor.mainColor
+            filterLabels[0].font = UIFont.systemFontOfSize(15)
         }
         
         initScrollView()
@@ -66,22 +65,15 @@ class FilterScrollView: UIView {
     }
     
     // MARK: - Public
-    func changeFIlterByPlus(plus: Bool) {
+    func changeFIlterFromOldIndex(oldIndex: Int, toNewIndex: Int) {
         
-        filterLabels[currentFilterIndex].textColor = UIColor.grayColor()
-        filterLabels[currentFilterIndex].font = UIFont.systemFontOfSize(13)
+        filterLabels[oldIndex].textColor = UIColor.grayColor()
+        filterLabels[oldIndex].font = UIFont.systemFontOfSize(13)
         
-        if plus {
-            guard currentFilterIndex < filterLabels.count - 1 else { return }
-            currentFilterIndex++
-        } else {
-            guard currentFilterIndex > 0 else { return }
-            currentFilterIndex--
-        }
+        filterLabels[toNewIndex].textColor = CommonColor.mainColor
+        filterLabels[toNewIndex].font = UIFont.systemFontOfSize(15)
         
-        filterLabels[currentFilterIndex].textColor = CommonColor.mainColor
-        filterLabels[currentFilterIndex].font = UIFont.systemFontOfSize(15)
-        scrollView.setContentOffset(CGPointMake(CGFloat(currentFilterIndex) * scrollView.frame.width, 0), animated: true)
+        scrollView.setContentOffset(CGPointMake(CGFloat(toNewIndex) * scrollView.frame.width, 0), animated: true)
         
     }
     

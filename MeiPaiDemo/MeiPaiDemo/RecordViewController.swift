@@ -121,6 +121,8 @@ class RecordViewController: UIViewController {
         
         guard (sender.direction == UISwipeGestureRecognizerDirection.Left) || (sender.direction == UISwipeGestureRecognizerDirection.Right) else { return }
         
+        let oldFilterIndex = filterIndex
+        
         if sender.direction == .Left {
             filterIndex++
         } else if sender.direction == .Right {
@@ -135,7 +137,7 @@ class RecordViewController: UIViewController {
         
         let filter = filters[ filterIndex % filters.count]
         recordVideoView.changeRecordMode(.RealTimeFilter, filter: filter)
-        filterScrollView.changeFIlterByPlus(sender.direction == .Left)
+        filterScrollView.changeFIlterFromOldIndex(oldFilterIndex, toNewIndex: filterIndex)
         
     }
     
