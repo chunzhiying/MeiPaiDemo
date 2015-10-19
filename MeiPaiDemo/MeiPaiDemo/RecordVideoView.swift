@@ -22,10 +22,7 @@ class RecordVideoView: UIView {
     private var videoCaptureInput: AVCaptureDeviceInput?
     private var audioCaptureInput: AVCaptureDeviceInput?
     
-    private var captureMovieFileOutput: AVCaptureMovieFileOutput?
     private var captureVideoDataOutput: AVCaptureVideoDataOutput?
-    
-    private var previewLayer: AVCaptureVideoPreviewLayer?
     private var filterPreviewView: RealTimeFilterView?
     private var filter: CIFilter?
     
@@ -146,7 +143,6 @@ class RecordVideoView: UIView {
         
         // add input
         guard let videoInput = videoCaptureInput, let audioInput = audioCaptureInput else {
-            previewLayer = nil
             captureSession = nil
             return
         }
@@ -378,7 +374,7 @@ extension RecordVideoView {
         guard let bufferPool = assetWriterPixelBufferInput?.pixelBufferPool else { print("bufferPool is nil"); return }
         
         var newPixelBuffer = UnsafeMutablePointer<CVPixelBuffer?>.alloc(1)
-        av(nil, bufferPool, newPixelBuffer)
+        CVPixelBufferPoolCreatePixelBuffer(nil, bufferPool, newPixelBuffer)
         
         filterPreviewView?.ciContext.render(outputImage,
                                             toCVPixelBuffer: newPixelBuffer.memory!,
@@ -417,8 +413,12 @@ extension RecordVideoView: AVCaptureVideoDataOutputSampleBufferDelegate {
         recordRealTimeFilterVideoPerFrame(sampleBuffer, outputImage: image)
         
         // rotation
-        let transfrom = CGAffineTransformMakeRotation( CGFloat(-M_PI_2) )
+        var transfrom = CGAffineTransformMakeRotation( CGFloat(-M_PI_2) )
+        if videoCaptureInput?.device.position == .Front {
+            transfrom = CGAffineTransformScale(transfrom, 1, -1)
+        }
         image = image.imageByApplyingTransform(transfrom)
+        
         
         dispatch_async(dispatch_get_main_queue()) {
             filterPreviewView?.image = image
