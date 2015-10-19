@@ -9,26 +9,14 @@
 import UIKit
 import AVFoundation
 
-enum RecordMode: Int {
-    case Normal
-    case RealTimeFilter
-}
-
-protocol MPCaptureFileOutputRecordingDelegate: NSObjectProtocol {
-    
-    func mpCaptureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!, canContinueRecord: Bool)
-}
-
 protocol RecordVideoUIDelegate: NSObjectProtocol {
     func dismissViewController()
+    func didFinishRecordWithCanContinue(canContinue: Bool)
 }
 
 class RecordVideoView: UIView {
     
-    weak var fileOutputRecordingdDelegate: MPCaptureFileOutputRecordingDelegate?
     weak var recordVideoDelegate: RecordVideoUIDelegate?
-    
-    var recordMode: RecordMode = .RealTimeFilter
     
     private var captureSession: AVCaptureSession?
     private var videoCaptureInput: AVCaptureDeviceInput?
@@ -165,30 +153,14 @@ class RecordVideoView: UIView {
         captureSession!.addInput(videoInput)
         captureSession!.addInput(audioInput)
         
-//        if recordMode == .Normal {
-//        
-//            captureMovieFileOutput = AVCaptureMovieFileOutput()
-//            captureSession!.addOutput(captureMovieFileOutput)
-//            
-//            previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-//            previewLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-//            previewLayer!.bounds = bounds
-//            previewLayer!.position = CGPointMake(bounds.size.width / 2, bounds.size.height / 2)
-//            
-//            layer.insertSublayer(previewLayer!, atIndex: 0)
-//            
-//        } else if recordMode == .RealTimeFilter {
+        captureVideoDataOutput = AVCaptureVideoDataOutput()
+        captureVideoDataOutput?.videoSettings = [kCVPixelBufferPixelFormatTypeKey : Int(kCVPixelFormatType_32BGRA)]
+        captureVideoDataOutput?.alwaysDiscardsLateVideoFrames = true
+        captureVideoDataOutput?.setSampleBufferDelegate(self, queue: dispatch_queue_create("VideoQueue", DISPATCH_QUEUE_SERIAL))
+        captureSession!.addOutput(captureVideoDataOutput)
         
-            captureVideoDataOutput = AVCaptureVideoDataOutput()
-            captureVideoDataOutput?.videoSettings = [kCVPixelBufferPixelFormatTypeKey : Int(kCVPixelFormatType_32BGRA)]
-            captureVideoDataOutput?.alwaysDiscardsLateVideoFrames = true
-            captureVideoDataOutput?.setSampleBufferDelegate(self, queue: dispatch_queue_create("VideoQueue", DISPATCH_QUEUE_SERIAL))
-            captureSession!.addOutput(captureVideoDataOutput)
-            
-            filterPreviewView = RealTimeFilterView(frame: bounds)
-            insertSubview(filterPreviewView!, atIndex: 0)
-            
-//        }
+        filterPreviewView = RealTimeFilterView(frame: bounds)
+        insertSubview(filterPreviewView!, atIndex: 0)
         
         captureSession?.commitConfiguration()
     }
@@ -315,11 +287,7 @@ class RecordVideoView: UIView {
     
     func startRecordingOnUrl(outputFileUrl: NSURL) {
         
-        if recordMode == .Normal {
-            captureMovieFileOutput?.startRecordingToOutputFileURL(outputFileUrl, recordingDelegate: self)
-        } else {
-            recordRealTimeFilterVideoToOutputFileURL(outputFileUrl)
-        }
+        recordRealTimeFilterVideoToOutputFileURL(outputFileUrl)
         
         showTipsView()
         setTimer()
@@ -327,11 +295,7 @@ class RecordVideoView: UIView {
     
     func stopRecording() {
         
-        if recordMode == .Normal {
-            captureMovieFileOutput?.stopRecording()
-        } else {
-            stopRealTimeFilterVideoRecord()
-        }
+        stopRealTimeFilterVideoRecord()
         
         hideTipsView()
         deinitTimer()
@@ -341,16 +305,9 @@ class RecordVideoView: UIView {
         timerCount = 0
     }
     
-    func changeRecordMode(mode: RecordMode, filter: CIFilter?) {
+    func changeRecordFilter(filter: CIFilter?) {
         
         self.filter = filter
-        self.recordMode = mode
-        
-//        stopRunning()
-//        previewLayer?.removeFromSuperlayer()
-//        filterPreviewView?.removeFromSuperview()
-//        setAVFoundation()
-//        startRunning()
         
     }
 }
@@ -378,7 +335,14 @@ extension RecordVideoView {
             assetWriterVideoInput.expectsMediaDataInRealTime = true
             assetWriterVideoInput.transform = CGAffineTransformMakeRotation( CGFloat(-M_PI_2) )
             
-            assetWriterPixelBufferInput = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: assetWriterVideoInput, sourcePixelBufferAttributes: nil)
+            let pixelBufferSettings = [
+                String(kCVPixelBufferPixelFormatTypeKey) : NSNumber(unsignedInt: kCVPixelFormatType_32ARGB),
+                String(kCVPixelBufferWidthKey) : Int(currentDimensions!.width),
+                String(kCVPixelBufferHeightKey) : Int(currentDimensions!.height),
+                String(kCVPixelFormatOpenGLESCompatibility) : kCFBooleanTrue
+            ]
+            
+            assetWriterPixelBufferInput = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: assetWriterVideoInput, sourcePixelBufferAttributes: pixelBufferSettings)
             
             assetWriter?.addInput(assetWriterVideoInput)
             
@@ -394,8 +358,10 @@ extension RecordVideoView {
         
         isRecording = false
         assetWriterPixelBufferInput = nil
-        assetWriter?.finishWritingWithCompletionHandler {
-            
+        assetWriter?.finishWritingWithCompletionHandler { [weak self] in
+            dispatch_async(dispatch_get_main_queue()) {
+                self?.recordVideoDelegate?.didFinishRecordWithCanContinue(timerCount < maxVideoLength)
+            }
         }
         
     }
@@ -407,13 +373,12 @@ extension RecordVideoView {
         currentSampleTime = CMSampleBufferGetOutputPresentationTimeStamp(sampleBuffer)
         currentDimensions = CMVideoFormatDescriptionGetDimensions(formatDescription!)
         
+        guard assetWriter?.status == .Writing else { return }
         guard (isRecording && assetWriterPixelBufferInput?.assetWriterInput.readyForMoreMediaData != nil) else { return }
         guard let bufferPool = assetWriterPixelBufferInput?.pixelBufferPool else { print("bufferPool is nil"); return }
         
-        var newPixelBuffer: UnsafeMutablePointer<CVPixelBuffer?> = nil
-        CVPixelBufferPoolCreatePixelBuffer(nil, bufferPool, newPixelBuffer)
-        
-        print("handle")
+        var newPixelBuffer = UnsafeMutablePointer<CVPixelBuffer?>.alloc(1)
+        av(nil, bufferPool, newPixelBuffer)
         
         filterPreviewView?.ciContext.render(outputImage,
                                             toCVPixelBuffer: newPixelBuffer.memory!,
@@ -431,14 +396,6 @@ extension RecordVideoView {
         newPixelBuffer = nil
     }
     
-}
-
-extension RecordVideoView: AVCaptureFileOutputRecordingDelegate {
-    
-    func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
-        fileOutputRecordingdDelegate?.mpCaptureOutput(captureOutput, didFinishRecordingToOutputFileAtURL: outputFileURL, fromConnections: connections, error: error, canContinueRecord: timerCount < maxVideoLength && timerCount > 0)
-    }
-
 }
 
 extension RecordVideoView: AVCaptureVideoDataOutputSampleBufferDelegate {

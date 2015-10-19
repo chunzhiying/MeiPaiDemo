@@ -68,7 +68,6 @@ class RecordViewController: UIViewController {
         
         func initRecordVideoView() {
             recordVideoView = RecordVideoView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height * 3 / 4))
-            recordVideoView.fileOutputRecordingdDelegate = self
             recordVideoView.recordVideoDelegate = self
             view.addSubview(recordVideoView)
 
@@ -135,8 +134,8 @@ class RecordViewController: UIViewController {
             filterIndex = 0
         }
         
-        let filter = filters[ filterIndex % filters.count]
-        recordVideoView.changeRecordMode(.RealTimeFilter, filter: filter)
+        let filter = filters[filterIndex % filters.count]
+        recordVideoView.changeRecordFilter(filter)
         filterScrollView.changeFIlterFromOldIndex(oldFilterIndex, toNewIndex: filterIndex)
         
     }
@@ -164,26 +163,23 @@ extension RecordViewController: RecordVideoUIDelegate {
     func dismissViewController() {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
-}
-
-extension RecordViewController: MPCaptureFileOutputRecordingDelegate {
     
-    func mpCaptureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!, canContinueRecord: Bool) {
+    func didFinishRecordWithCanContinue(canContinue: Bool) {
         
-        if canContinueRecord {
-            
+        if canContinue {
+
             let alertController = UIAlertController(title: "提示", message: "是否要结束录制", preferredStyle: .Alert)
             let cancelAction = UIAlertAction(title: "No,继续取景", style: .Cancel, handler: nil)
             let confirmAction = UIAlertAction(title: "Yes,存入图库", style: .Default) { [weak self] _ in
                 self?.handleAlertController()
             }
-            
+
             alertController.addAction(confirmAction)
             alertController.addAction(cancelAction)
             self.presentViewController(alertController, animated: true, completion: nil)
-            
+
         } else {
-            
+
             let alertController = UIAlertController(title: "提示", message: "您最多只能录制10秒！", preferredStyle: .Alert)
             let confirmAction = UIAlertAction(title: "确定", style: .Default) { [weak self] _ in
                 self?.handleAlertController()
@@ -192,7 +188,7 @@ extension RecordViewController: MPCaptureFileOutputRecordingDelegate {
             alertController.addAction(confirmAction)
             self.presentViewController(alertController, animated: true, completion: nil)
         }
-        
+
     }
 }
 
