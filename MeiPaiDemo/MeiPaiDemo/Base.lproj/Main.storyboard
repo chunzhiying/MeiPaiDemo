@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vGa-fK-nwi">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
@@ -149,22 +150,30 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G1g-q8-jxD" userLabel="Record Button">
-                                <rect key="frame" x="265" y="515" width="70" height="70"/>
+                                <rect key="frame" x="265" y="510" width="70" height="70"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="70" id="q7X-NG-Beh"/>
                                     <constraint firstAttribute="width" constant="70" id="yJx-ZQ-myg"/>
                                 </constraints>
                             </view>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XRH-5D-OVE" userLabel="photo">
+                                <rect key="frame" x="20" y="510" width="70" height="70"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="XRH-5D-OVE" firstAttribute="leading" secondItem="iSK-1i-crm" secondAttribute="leading" constant="20" id="5ls-2V-8SG"/>
+                            <constraint firstItem="XRH-5D-OVE" firstAttribute="width" secondItem="G1g-q8-jxD" secondAttribute="width" id="VRp-AF-IRh"/>
                             <constraint firstItem="G1g-q8-jxD" firstAttribute="centerX" secondItem="iSK-1i-crm" secondAttribute="centerX" id="aKu-y3-P7H"/>
-                            <constraint firstItem="k0r-kV-vbY" firstAttribute="top" secondItem="G1g-q8-jxD" secondAttribute="bottom" constant="15" id="tUW-SF-6Pt"/>
+                            <constraint firstItem="XRH-5D-OVE" firstAttribute="height" secondItem="G1g-q8-jxD" secondAttribute="height" id="qP3-Lx-NUS"/>
+                            <constraint firstItem="k0r-kV-vbY" firstAttribute="top" secondItem="G1g-q8-jxD" secondAttribute="bottom" constant="20" id="tUW-SF-6Pt"/>
+                            <constraint firstItem="XRH-5D-OVE" firstAttribute="top" secondItem="G1g-q8-jxD" secondAttribute="top" id="y06-w0-Yw8"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="MeiPai" id="L5E-hC-1O2"/>
                     <connections>
+                        <outlet property="photoImage" destination="XRH-5D-OVE" id="9iW-Vw-ZAQ"/>
                         <outlet property="recordButton" destination="G1g-q8-jxD" id="bn9-7r-Ik8"/>
                     </connections>
                 </viewController>
@@ -242,6 +251,23 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PLh-p4-fH7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="786" y="568"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="cqH-Xa-RGc">
+            <objects>
+                <viewController id="e4B-ws-Mwo" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="x5v-qd-XQW"/>
+                        <viewControllerLayoutGuide type="bottom" id="Pxl-HX-tSD"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="J6Q-Ml-1Ga">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AKA-dH-DGj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
     <resources>

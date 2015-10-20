@@ -29,7 +29,7 @@ class RecordVideoView: UIView {
     private var assetWriter: AVAssetWriter?
     private var assetWriterPixelBufferInput: AVAssetWriterInputPixelBufferAdaptor?
     private var isRecording = false
-    private var currentSampleTime: CMTime?
+    private var currentSampleTime = kCMTimeZero
     private var currentDimensions: CMVideoDimensions? // core media 尺寸
     
     private var tipsView: UILabel!
@@ -297,6 +297,10 @@ class RecordVideoView: UIView {
         deinitTimer()
     }
     
+    func takePhoto() -> UIImage? {
+        return filterPreviewView?.uiImage
+    }
+    
     func resetRecordVideoUI() {
         timerCount = 0
     }
@@ -346,7 +350,7 @@ extension RecordVideoView {
         
         createWriter()
         assetWriter?.startWriting()
-        assetWriter?.startSessionAtSourceTime(currentSampleTime!)
+        assetWriter?.startSessionAtSourceTime(currentSampleTime)
         isRecording = true
     }
     
@@ -370,26 +374,23 @@ extension RecordVideoView {
         currentDimensions = CMVideoFormatDescriptionGetDimensions(formatDescription!)
         
         guard assetWriter?.status == .Writing else { return }
-        guard (isRecording && assetWriterPixelBufferInput?.assetWriterInput.readyForMoreMediaData != nil) else { return }
+        guard (isRecording && assetWriterPixelBufferInput?.assetWriterInput.readyForMoreMediaData == true) else { return }
         guard let bufferPool = assetWriterPixelBufferInput?.pixelBufferPool else { print("bufferPool is nil"); return }
         
-        var newPixelBuffer = UnsafeMutablePointer<CVPixelBuffer?>.alloc(1)
-        CVPixelBufferPoolCreatePixelBuffer(nil, bufferPool, newPixelBuffer)
+        var newPixelBuffer: CVPixelBuffer? = nil
+        CVPixelBufferPoolCreatePixelBuffer(nil, bufferPool, &newPixelBuffer)
         
         filterPreviewView?.ciContext.render(outputImage,
-                                            toCVPixelBuffer: newPixelBuffer.memory!,
+                                            toCVPixelBuffer: newPixelBuffer!,
                                             bounds: outputImage.extent,
                                             colorSpace: nil)
         
-        let success = assetWriterPixelBufferInput?.appendPixelBuffer(newPixelBuffer.memory!, withPresentationTime: currentSampleTime!)
+        let success = assetWriterPixelBufferInput?.appendPixelBuffer(newPixelBuffer!, withPresentationTime: currentSampleTime)
         
         if success == false {
             print("pixel append false")
         }
         
-        newPixelBuffer.destroy()
-        newPixelBuffer.dealloc(1)
-        newPixelBuffer = nil
     }
     
 }
@@ -419,10 +420,10 @@ extension RecordVideoView: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         image = image.imageByApplyingTransform(transfrom)
         
-        
         dispatch_async(dispatch_get_main_queue()) {
             filterPreviewView?.image = image
         }
+
     }
     
 }

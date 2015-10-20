@@ -13,6 +13,11 @@ import AssetsLibrary
 class RecordViewController: UIViewController {
 
     @IBOutlet weak var recordButton: UIView!
+    @IBOutlet weak var photoImage: UIImageView!
+    
+    private var bigPhotoImage: UIImageView?
+    private var blackBackground: UIView!
+    
     private var recordVideoView: RecordVideoView!
     private var filterScrollView: FilterScrollView!
     private var loadingBox: LoadingBox? = LoadingBox()
@@ -63,6 +68,9 @@ class RecordViewController: UIViewController {
             
             let longTap = UILongPressGestureRecognizer(target: self, action: "handleLongGesture:")
             recordButton.addGestureRecognizer(longTap)
+            
+            let tap = UITapGestureRecognizer(target: self, action: "handleRecordTap:")
+            recordButton.addGestureRecognizer(tap)
 
         }
         
@@ -71,6 +79,17 @@ class RecordViewController: UIViewController {
             recordVideoView.recordVideoDelegate = self
             view.addSubview(recordVideoView)
 
+        }
+        
+        func initPhotoImage() {
+            let tap = UITapGestureRecognizer(target: self, action: "handlePhotoTap:")
+            photoImage.userInteractionEnabled = true
+            photoImage.addGestureRecognizer(tap)
+            
+            blackBackground = UIView(frame: view.frame)
+            blackBackground.backgroundColor = UIColor.blackColor()
+            blackBackground.alpha = 0
+            view.addSubview(blackBackground)
         }
         
         func initFilterScrollView() {
@@ -88,9 +107,11 @@ class RecordViewController: UIViewController {
             recordVideoView.addGestureRecognizer(rightSwipe)
         }
         
+        
         initRecordButton()
         initRecordVideoView()
         initFilterScrollView()
+        initPhotoImage()
         
     }
 
@@ -112,6 +133,48 @@ class RecordViewController: UIViewController {
             recordVideoView.stopRecording()
         default:
             return
+        }
+        
+    }
+    
+    func handleRecordTap(sender: UITapGestureRecognizer) {
+        
+        guard let photo = recordVideoView.takePhoto() else { return }
+        photoImage.image = photo
+        
+    }
+    
+    func handlePhotoTap(sender: UITapGestureRecognizer) {
+        
+        if sender.view == photoImage {
+        
+            bigPhotoImage = UIImageView(frame: photoImage.frame)
+            bigPhotoImage?.image = photoImage.image
+            view.addSubview(bigPhotoImage!)
+            
+            let tap = UITapGestureRecognizer(target: self, action: "handlePhotoTap:")
+            bigPhotoImage?.userInteractionEnabled = true
+            bigPhotoImage?.addGestureRecognizer(tap)
+            
+            UIView.animateWithDuration(0.5) {
+                self.bigPhotoImage?.frame = UIScreen.mainScreen().bounds
+                self.bigPhotoImage?.transform = CGAffineTransformMakeScale(0.9, 0.9)
+                self.blackBackground.alpha = 0.7
+            }
+            photoImage.userInteractionEnabled = false
+            
+        } else if sender.view == bigPhotoImage {
+            
+            UIView.animateWithDuration(0.5, animations: {
+                self.bigPhotoImage?.frame = self.photoImage.frame
+                self.bigPhotoImage?.transform = CGAffineTransformMakeScale(1, 1)
+                self.blackBackground.alpha = 0
+                
+                }, completion: { finish in
+                    self.bigPhotoImage?.removeFromSuperview()
+                    self.photoImage.userInteractionEnabled = true
+            })
+            
         }
         
     }

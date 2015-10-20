@@ -17,6 +17,11 @@ class RealTimeFilterView: GLKView {
         }
     }
     
+    var uiImage: UIImage? {
+        guard let myImage = self.image else { return nil }
+        return UIImage(CGImage: ciContext.createCGImage(myImage, fromRect: myImage.extent))
+    }
+    
     let ciContext: CIContext
     
     override convenience init(frame: CGRect) {
