@@ -44,7 +44,7 @@ class RecordModel {
                 saveVideo(outputFileUrlAry.first!)
                 return }
             
-            let assertAry = outputFileUrlAry.map({ return AVAsset(URL: $0) })
+            let assertAry: [AVAsset?] = outputFileUrlAry.map({ return AVAsset(URL: $0) })
             
             let mixComposition = AVMutableComposition()
             var instructionAry = [AVMutableVideoCompositionLayerInstruction]()
@@ -56,7 +56,7 @@ class RecordModel {
             var videoTimeDuration = kCMTimeZero
             for var i = 0; i < assertAry.count; i++ {
                 
-                let assert = assertAry[i]
+                guard let assert = assertAry[i] else { continue }
                 do {
                     try videoTrack.insertTimeRange(CMTimeRangeMake(CMTimeMake(1, 15), assert.duration),
                         ofTrack: assert.tracksWithMediaType(AVMediaTypeVideo).first!,
@@ -68,7 +68,7 @@ class RecordModel {
                 videoTimeDuration = CMTimeAdd(videoTimeDuration, assert.duration)
             }
             
-            let instruction = videoCompositionInstructionForTrack(videoTrack, asset:assertAry.first!)
+            let instruction = videoCompositionInstructionForTrack(videoTrack, asset:assertAry.first!!)
             instruction.setOpacity(0, atTime: videoTimeDuration) //遮挡后面轨道的图像
             
             instructionAry += [instruction]

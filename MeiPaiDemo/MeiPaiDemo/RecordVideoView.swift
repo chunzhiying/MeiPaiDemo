@@ -11,7 +11,7 @@ import AVFoundation
 
 protocol RecordVideoUIDelegate: NSObjectProtocol {
     func dismissViewController()
-    func didFinishRecordWithCanContinue(canContinue: Bool)
+    func didFinishRecordWithCanContinue(canContinue: Bool) //传入视频最后一帧的图片
 }
 
 class RecordVideoView: UIView {
@@ -31,6 +31,7 @@ class RecordVideoView: UIView {
     private var isRecording = false
     private var currentSampleTime = kCMTimeZero
     private var currentDimensions: CMVideoDimensions? // core media 尺寸
+    private var endingImage: UIImage?
     
     private var tipsView: UILabel!
     private var progress: UISlider!
@@ -308,10 +309,6 @@ class RecordVideoView: UIView {
         return filterPreviewView?.uiImage
     }
     
-    func resetRecordVideoUI() {
-        timerCount = 0
-    }
-    
     func changeRecordFilter(filter: CIFilter?) {
         
         self.filter = filter
@@ -325,40 +322,9 @@ extension RecordVideoView {
     // 配置AssetWriter，实时滤镜录像使用
     func recordRealTimeFilterVideoToOutputFileURL(outputFileUrl: NSURL) {
         
-        func createWriter() {
-            
-            do {
-                assetWriter = try AVAssetWriter(URL: outputFileUrl, fileType: AVFileTypeQuickTimeMovie)
-            } catch {
-                return
-            }
-            
-            let outputSettings = [
-                AVVideoCodecKey : AVVideoCodecH264,
-                AVVideoWidthKey : Int(currentDimensions!.width),
-                AVVideoHeightKey : Int(currentDimensions!.height)
-            ]
-            
-            let assetWriterVideoInput = AVAssetWriterInput(mediaType: AVMediaTypeVideo, outputSettings: outputSettings as? [String : AnyObject])
-            assetWriterVideoInput.expectsMediaDataInRealTime = true
-            assetWriterVideoInput.transform = CGAffineTransformMakeRotation( CGFloat(-M_PI_2) )
-            
-            let pixelBufferSettings = [
-                String(kCVPixelBufferPixelFormatTypeKey) : NSNumber(unsignedInt: kCVPixelFormatType_32ARGB),
-                String(kCVPixelBufferWidthKey) : Int(currentDimensions!.width),
-                String(kCVPixelBufferHeightKey) : Int(currentDimensions!.height),
-                String(kCVPixelFormatOpenGLESCompatibility) : kCFBooleanTrue
-            ]
-            
-            assetWriterPixelBufferInput = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: assetWriterVideoInput, sourcePixelBufferAttributes: pixelBufferSettings)
-            
-            assetWriter?.addInput(assetWriterVideoInput)
-            
-        }
-        
-        createWriter()
+        assetWriter = createWriter(outputFileUrl)
         assetWriter?.startWriting()
-        assetWriter?.startSessionAtSourceTime(currentSampleTime)
+        assetWriter?.startSessionAtSourceTime(currentSampleTime) // 跟实时回调的时间一致
         isRecording = true
     }
     
@@ -368,7 +334,10 @@ extension RecordVideoView {
         assetWriterPixelBufferInput = nil
         assetWriter?.finishWritingWithCompletionHandler { [weak self] in
             dispatch_async(dispatch_get_main_queue()) {
-                self?.recordVideoDelegate?.didFinishRecordWithCanContinue(timerCount < maxVideoLength)
+                guard let weakSelf = self else { return }
+                weakSelf.endingImage = weakSelf.filterPreviewView?.uiImage
+                weakSelf.recordVideoDelegate?.didFinishRecordWithCanContinue(weakSelf.timerCount < weakSelf.maxVideoLength)
+                
             }
         }
         
@@ -383,7 +352,7 @@ extension RecordVideoView {
         
         guard assetWriter?.status == .Writing else { return }
         guard (isRecording && assetWriterPixelBufferInput?.assetWriterInput.readyForMoreMediaData == true) else { return }
-        guard let bufferPool = assetWriterPixelBufferInput?.pixelBufferPool else { print("bufferPool is nil"); return }
+        guard let bufferPool = assetWriterPixelBufferInput?.pixelBufferPool else { return }
         
         var newPixelBuffer: CVPixelBuffer? = nil
         CVPixelBufferPoolCreatePixelBuffer(nil, bufferPool, &newPixelBuffer)
@@ -399,6 +368,89 @@ extension RecordVideoView {
             print("pixel append false")
         }
         
+    }
+    
+    
+    func createWriter(outputFileUrl: NSURL) -> AVAssetWriter? {
+        
+        let writer: AVAssetWriter
+        do {
+            writer = try AVAssetWriter(URL: outputFileUrl, fileType: AVFileTypeQuickTimeMovie)
+        } catch {
+            return nil
+        }
+        
+        let outputSettings = [
+            AVVideoCodecKey : AVVideoCodecH264,
+            AVVideoWidthKey : Int(currentDimensions!.width),
+            AVVideoHeightKey : Int(currentDimensions!.height)
+        ]
+        
+        let assetWriterVideoInput = AVAssetWriterInput(mediaType: AVMediaTypeVideo, outputSettings: outputSettings as? [String : AnyObject])
+        assetWriterVideoInput.expectsMediaDataInRealTime = true
+        assetWriterVideoInput.transform = CGAffineTransformMakeRotation( CGFloat(-M_PI_2) )
+        
+        let pixelBufferSettings = [
+            String(kCVPixelBufferPixelFormatTypeKey) : NSNumber(unsignedInt: kCVPixelFormatType_32ARGB),
+            String(kCVPixelBufferWidthKey) : Int(currentDimensions!.width),
+            String(kCVPixelBufferHeightKey) : Int(currentDimensions!.height),
+            String(kCVPixelFormatOpenGLESCompatibility) : kCFBooleanTrue
+        ]
+        
+        assetWriterPixelBufferInput = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: assetWriterVideoInput, sourcePixelBufferAttributes: pixelBufferSettings)
+        
+        writer.addInput(assetWriterVideoInput)
+        
+        return writer
+    }
+
+    
+    func resetRecordVideoUIAndHandleEndingImageByUrl(endingVideoUrl: NSURL) {
+        timerCount = 0
+        
+//        guard let endingAsset = createWriter(endingVideoUrl) else { return }
+//        
+//        endingAsset.startWriting()
+//        endingAsset.startSessionAtSourceTime(kCMTimeZero)
+//        
+//        let lastFrameTime = CMTimeMake(0, 1)
+//        
+//        let endingVideo_queue = dispatch_queue_create("endingVideo", nil)
+//        let assetInput = endingAsset.inputs.first!
+//        
+//        assetInput.requestMediaDataWhenReadyOnQueue(endingVideo_queue) {
+//            
+//            if assetInput.readyForMoreMediaData {
+//                
+//                guard let bufferPool = self.assetWriterPixelBufferInput?.pixelBufferPool else { return }
+//                
+//                var pixelBuffer: CVPixelBuffer? = nil
+//                CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, bufferPool, &pixelBuffer)
+//
+//                guard let managedPixelBuffer = pixelBuffer where status == 0 else { return }
+//                
+//                CVPixelBufferLockBaseAddress(managedPixelBuffer, 0)
+//                
+//                let data = CVPixelBufferGetBaseAddress(managedPixelBuffer)
+//                let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+//                let context = CGBitmapContextCreate(data, Int(self.endingImage!.size.width), Int(self.endingImage!.size.height), 8, CVPixelBufferGetBytesPerRow(managedPixelBuffer), rgbColorSpace, CGImageAlphaInfo.PremultipliedFirst.rawValue)
+//                
+//                context.render(outputImage,toCVPixelBuffer: newPixelBuffer!,bounds: outputImage.extent,colorSpace: nil)
+//                
+//                CVPixelBufferUnlockBaseAddress(managedPixelBuffer, 0)
+//                
+//                
+//                let image = CIImage(CGImage: (self.endingImage?.CGImage)!)
+//                self.filterPreviewView?.ciContext.render(image, toCVPixelBuffer: pixelBuffer!, bounds: image.extent, colorSpace: nil)
+//                
+//                self.assetWriterPixelBufferInput?.appendPixelBuffer(pixelBuffer!, withPresentationTime: lastFrameTime)
+//                
+//            }
+//            
+//            assetInput.markAsFinished()
+//            endingAsset.finishWritingWithCompletionHandler({  })
+//        }
+
     }
     
 }
