@@ -159,6 +159,13 @@ class RecordVideoView: UIView {
         insertSubview(filterPreviewView!, atIndex: 0)
         
         captureSession?.commitConfiguration()
+        
+//        lockVideoDeviceToChangeProperty { device in
+//            if device.isExposureModeSupported(.Custom) {
+//                device.exposureMode = .Custom
+//                device.setExposureModeCustomWithDuration(AVCaptureExposureDurationCurrent, ISO: device.activeFormat.maxISO, completionHandler: {time in })
+//            }
+//        }
     }
 
     // MARK: - IBAction
@@ -310,6 +317,7 @@ class RecordVideoView: UIView {
         self.filter = filter
         
     }
+    
 }
 
 extension RecordVideoView {

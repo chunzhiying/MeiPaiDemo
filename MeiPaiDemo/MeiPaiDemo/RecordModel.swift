@@ -58,7 +58,7 @@ class RecordModel {
                 
                 let assert = assertAry[i]
                 do {
-                    try videoTrack.insertTimeRange(CMTimeRangeMake(kCMTimeZero, assert.duration),
+                    try videoTrack.insertTimeRange(CMTimeRangeMake(CMTimeMake(1, 15), assert.duration),
                         ofTrack: assert.tracksWithMediaType(AVMediaTypeVideo).first!,
                         atTime: videoTimeDuration)
                 } catch  {
