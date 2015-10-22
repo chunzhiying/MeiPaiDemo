@@ -208,7 +208,7 @@ class RecordViewController: UIViewController {
         canRecord = false
         loadingBox?.showInView(view, withText: "处理视频中..")
         
-//        recordVideoView.resetRecordVideoUIAndHandleEndingImageByUrl(model.outputFileUrl)
+        recordVideoView.resetRecordVideoUIAndHandleEndingImageByUrl(model.outputFileUrl)
 //        model.addNewVideoFilePath()
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { [weak self] in

@@ -40,7 +40,7 @@ class RecordModel {
         
         func mergeVideo() {
             
-            guard outputFileUrlAry.count > 1 else {
+            guard outputFileUrlAry.count > 0 else {
                 saveVideo(outputFileUrlAry.first!)
                 return }
             
